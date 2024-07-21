@@ -2,8 +2,7 @@
 
 #include "bn_string.h"
 #include "bn_array.h"
-#include "bn_timer.h"
-#include "bn_timers.h"
+#include "bn_keypad.h"
 #include "bn_sprite_ptr.h"
 #include "bn_sound_items.h"
 #include "bn_regular_bg_ptr.h"
@@ -12,20 +11,25 @@
 #include "bn_sprite_text_generator.h"
 #include "common_variable_8x8_sprite_font.h"
 
-#include "bn_fixed.h"
 
 #include "data.h"
 
 int main()
 {
     bn::core::init();
-    bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
-    
-    // Debug texts
-    //bn::vector<bn::sprite_ptr, 16> TextSprites;
-    //bn::string<512> Text = " ";
-    //bn::sprite_text_generator TextGenerator(common::variable_8x8_sprite_font);
-    
+    bn::bg_palettes::set_transparent_color(bn::color(31, 0, 0));
+
+    // Texts
+    bn::vector<bn::sprite_ptr, 8> TextSprites;
+    bn::string<64> Text = "VVV - VACIADOR";
+    bn::string<64> Text_2 = "KLF";
+    bn::sprite_text_generator TextGenerator(common::variable_8x8_sprite_font);
+    bn::sprite_text_generator TextGeneratorOptions(common::variable_8x8_sprite_font);
+    TextGenerator.generate(-96, -68, Text, TextSprites);
+    TextGeneratorOptions.generate(-96, -58, Text_2, TextSprites);
+
+
+
     uint8_t audio_counter = 0;
     uint16_t image_counter = 0;
 
@@ -41,7 +45,7 @@ int main()
     {
         //TextSprites.clear();
         //Text = "Audio: " + bn::to_string<64>(audio_counter) + " Image: " + bn::to_string<64>(image_counter);
-
+        
         if (audio_frames == 600)
         {
             audio_frames = 0;
@@ -75,6 +79,7 @@ int main()
         //TextGenerator.generate(-6 * 16, -68, Text, TextSprites);
         audio_frames++;
         image_frames++;
+        
         bn::core::update();
     }
 }

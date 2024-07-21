@@ -4,7 +4,7 @@ butano
 dmg_audio
 graphics
 audio
-MusicChills.elf
-MusicChills.gba
-MusicChills.sav
 Makefile
+*.sav
+*.gba
+*.elf
