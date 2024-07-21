@@ -1,7 +1,10 @@
 .vscode
 build
 butano
-RetroBlackJack.elf
-RetroBlackJack.gba
-RetroBlackJack.sav
+dmg_audio
+graphics
+audio
+MusicChills.elf
+MusicChills.gba
+MusicChills.sav
 Makefile
