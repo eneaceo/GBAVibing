@@ -10,140 +10,70 @@
 #include "bn_regular_bg_item.h"
 #include "bn_bg_palettes.h"
 
+#include "Data.h"
+#include "Functions.h"
 #include "Singletons.h"
 
-
 #include "bn_regular_bg_items_background_menu.h"
-
-#include "data.h"
 
 namespace
 {
 
-    void text_wigle(bn::vector<bn::sprite_ptr, 32> &SelectedTextSprites, bn::fixed &angle, const bn::fixed angle_inc, const uint8_t SelectedOption)
-    {
-        angle -= angle_inc;
-
-        if (angle == 0)
-        {
-            angle += 360;
-        }
-
-        bn::fixed local_angle = angle;
-
-        for (bn::sprite_ptr &SelectedTextSprite : SelectedTextSprites)
-        {
-            local_angle += angle_inc * 4;
-
-            if (local_angle >= 360)
-            {
-                local_angle -= 360;
-            }
-
-            SelectedTextSprite.set_y(SelectedOption * 15 + bn::degrees_lut_sin(local_angle) * 2);
-        }
-    }
-
-    void text_wigle_b(bn::vector<bn::sprite_ptr, 32> &SelectedTextSprites, bn::fixed &angle, const bn::fixed angle_inc, const uint8_t SelectedOption)
-    {
-        angle -= angle_inc;
-
-        if (angle == 0)
-        {
-            angle += 360;
-        }
-
-        bn::fixed local_angle = angle;
-
-        for (bn::sprite_ptr &SelectedTextSprite : SelectedTextSprites)
-        {
-            local_angle += angle_inc * 4;
-
-            if (local_angle >= 360)
-            {
-                local_angle -= 360;
-            }
-
-            SelectedTextSprite.set_y(-50 + SelectedOption * 15 + bn::degrees_lut_sin(local_angle) * 2);
-        }
-    }
-
-    void selected_option(const uint8_t SelectedOption, const uint8_t NumberOptions,
-                         bn::vector<bn::sprite_ptr, 32> &TextSprites, bn::vector<bn::sprite_ptr, 32> &SelectedTextSprites,
-                         const bn::array<bn::string<32>, 2> Texts, bn::fixed &angle,
-                         const bn::fixed angle_inc)
+    void selected_option_menu(const uint8_t SelectedOption)
     {
 
-        for (uint8_t option = 0; option < NumberOptions; ++option)
+        for (uint8_t option = 0; option < Data::MenuTexts.size(); ++option)
         {
             if (option != SelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(0, 15 * option, Texts[option], TextSprites);
+                Singletons::TextGenerator.generate(0, 15 * option, Data::MenuTexts[option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(0, 15 * option, Texts[option], SelectedTextSprites);
+                Singletons::TextGenerator.generate(0, 15 * option, Data::MenuTexts[option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
 
-        text_wigle(SelectedTextSprites, angle, angle_inc, SelectedOption);
+        Functions::text_wigle(SelectedOption, 0);
     }
 
-    void selected_option(const uint8_t SelectedOption, const uint8_t NumberOptions,
-                         bn::vector<bn::sprite_ptr, 32> &TextSprites, bn::vector<bn::sprite_ptr, 32> &SelectedTextSprites,
-                         const bn::array<bn::string<32>, 9> Texts, bn::fixed &angle,
-                         const bn::fixed angle_inc)
+    void selected_option_album(const uint8_t SelectedOption)
     {
 
-        for (uint8_t option = 0; option < NumberOptions; ++option)
+        for (uint8_t option = 0; option < Data::AlbumTexts.size(); ++option)
         {
             if (option != SelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(-40, -50 + (15 * option), Texts[option], TextSprites);
+                Singletons::TextGenerator.generate(-40, -50 + (15 * option), Data::AlbumTexts[option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(-20, -50 + (15 * option), Texts[option], SelectedTextSprites);
+                Singletons::TextGenerator.generate(-20, -50 + (15 * option), Data::AlbumTexts[option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
 
-        text_wigle_b(SelectedTextSprites, angle, angle_inc, SelectedOption);
+        Functions::text_wigle(SelectedOption, -50);
     }
 
-    void album_selection(bn::vector<bn::sprite_ptr, 32> &TextSprites, bn::vector<bn::sprite_ptr, 32> &SelectedTextSprites, 
-                        bn::fixed &angle, const bn::fixed angle_inc)
+    void album_selection()
     {
-
-        const bn::string<32> vvv_01 = "Zugzwang";
-        const bn::string<32> vvv_02 = "El Ángel de la Historia";
-        const bn::string<32> vvv_03 = "Mediocres y Agresivos";
-        const bn::string<32> vvv_04 = "Hikutsu";
-        const bn::string<32> vvv_05 = "Rush";
-        const bn::string<32> vvv_06 = "Bellver";
-        const bn::string<32> vvv_07 = "KLF";
-        const bn::string<32> vvv_08 = "La Grieta";
-        const bn::string<32> vvv_09 = "Ctrl + Alt + Supr";
-
         uint8_t SelectedOption = 0;
-        const uint8_t NumberOptionsMenu = 9;
-
-        const bn::array<bn::string<32>, 9> MenuTexts = {vvv_01, vvv_02, vvv_03, vvv_04, vvv_05, vvv_06, vvv_07, vvv_08, vvv_09};
+        const uint8_t NumberOptionsMenu = Data::AlbumTexts.size();
 
         bool waited = false;
         bool loop = true;
-        bn::optional<bn::sound_handle> sound_handler;
         while (loop)
         {
-            TextSprites.clear();
-            SelectedTextSprites.clear();
+            Singletons::TextSprites.clear();
+            Singletons::SelectedTextSprites.clear();
 
             // Generate static texts
             Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
@@ -151,241 +81,24 @@ namespace
             // WIP Keypad
             if (bn::keypad::down_pressed())
             {
-                if (SelectedOption != NumberOptionsMenu - 1)
-                {
-                    SelectedOption += 1;
-                }
-                else
-                {
-                    SelectedOption = 0;
-                }
+                SelectedOption = (SelectedOption + 1) % NumberOptionsMenu;
             }
             if (bn::keypad::up_pressed())
             {
-                if (SelectedOption != 0)
-                {
-                    SelectedOption -= 1;
-                }
-                else
-                {
-                    SelectedOption = NumberOptionsMenu - 1;
-                }
+                SelectedOption = (SelectedOption + NumberOptionsMenu - 1) % NumberOptionsMenu;
             }
+
             if (bn::keypad::b_pressed())
             {
                 loop = false;
             }
+
             if (bn::keypad::a_pressed() && waited && loop)
             {
-                int audio_counter = 0;
-                int audio_frames = 0;
-                switch (SelectedOption)
-                {
-                case 0:
-                    sound_handler = Data::audio_items_zugzwang[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 14160; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_zugzwang.size())
-                            {
-                                sound_handler = Data::audio_items_zugzwang[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 1:
-                    sound_handler = Data::audio_items_elangeldelahistoria[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 16080; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_elangeldelahistoria.size())
-                            {
-                                sound_handler = Data::audio_items_elangeldelahistoria[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 2:
-                    sound_handler = Data::audio_items_mediocresyagresivos[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 12480; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_mediocresyagresivos.size())
-                            {
-                                sound_handler = Data::audio_items_mediocresyagresivos[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 3:
-                    sound_handler = Data::audio_items_hikutsu[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 12000; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_hikutsu.size())
-                            {
-                                sound_handler = Data::audio_items_hikutsu[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 4:
-                    sound_handler = Data::audio_items_rush[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 13380; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_rush.size())
-                            {
-                                sound_handler = Data::audio_items_rush[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 5:
-                    sound_handler = Data::audio_items_bellver[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 13080; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_bellver.size())
-                            {
-                                sound_handler = Data::audio_items_bellver[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 6:
-                    sound_handler = Data::audio_items_klf[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 14400; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_klf.size())
-                            {
-                                sound_handler = Data::audio_items_klf[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                           sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 7:
-                    sound_handler = Data::audio_items_lagrieta[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 16200; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_lagrieta.size())
-                            {
-                                sound_handler = Data::audio_items_lagrieta[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                case 8:
-                    sound_handler = Data::audio_items_ctrlaltsupr[audio_counter].play();
-                    for (uint32_t frame = 0; frame < 7140; frame++)
-                    {
-                        if (audio_frames == 900)
-                        {
-                            audio_frames = 0;
-                            audio_counter++;
-                            if (audio_counter < Data::audio_items_ctrlaltsupr.size())
-                            {
-                                sound_handler = Data::audio_items_ctrlaltsupr[audio_counter].play();
-                            }
-                        }
-                        if (bn::keypad::b_pressed())
-                        {
-                            sound_handler->stop();
-                            break;
-                        }
-                        audio_frames++;
-                        bn::core::update();
-                    }
-                    break;
-                default:
-                    break;
-                }
+                Functions::play_song(SelectedOption);
             }
 
-            selected_option(SelectedOption, NumberOptionsMenu, TextSprites, SelectedTextSprites, MenuTexts, angle, angle_inc);
+            selected_option_album(SelectedOption);
 
             bn::core::update();
 
@@ -397,122 +110,128 @@ namespace
         }
     }
 
-    void process_videoclip(bn::optional<bn::regular_bg_ptr> &image_optional)
+    void process_videoclip()
     {
         // Videoclip variables
-        uint8_t audio_counter = 0;
-        uint16_t image_counter = 0;
+        uint8_t image_counter = 0;
+        uint16_t max_image_counter = Data::image_items.size();
 
-        uint16_t audio_frames = 0;
+        uint8_t audio_counter = Functions::GetSongStart(6);
+        uint8_t max_audio_counter = Functions::GetSongEnd(6);
+
         uint8_t image_frames = 0;
+        uint16_t audio_frames = 0;
+        uint16_t max_total_frames = Functions::GetSongFrames(6);
 
-        image_optional.reset();
+        // Reset background and audio
+        Singletons::image_optional.reset();
+        Singletons::sound_handler.get()->stop();
 
-        bn::optional<bn::sound_handle> sound_handler;
-        sound_handler = Data::audio_items_klf[audio_counter].play();
-        image_optional = Data::image_items[image_counter].create_bg(0, 0);
-        for (uint32_t frame = 0; frame < 14400; frame++)
+        Singletons::sound_handler = Data::audio_items[audio_counter].play();
+        Singletons::image_optional = Data::image_items[image_counter].create_bg(0, 0);
+
+        // Loop
+        for (uint16_t frame = 0; frame < max_total_frames; frame++)
         {
+            // Return
             if (bn::keypad::b_pressed())
             {
-                sound_handler->stop();
                 break;
             }
-            if (audio_frames == 900)
+            // Audio check
+            if (audio_frames == Data::max_audio_frames)
             {
                 audio_frames = 0;
                 audio_counter++;
-                if (audio_counter < Data::audio_items_klf.size())
+                if (audio_counter <= max_audio_counter)
                 {
-                    sound_handler = Data::audio_items_klf[audio_counter].play();
+                    Singletons::sound_handler = Data::audio_items[audio_counter].play();
                 }
             }
-
-            if (image_frames == 60)
+            // Image check
+            if (image_frames == Data::max_image_frames)
             {
                 image_frames = 0;
                 image_counter++;
-                image_optional.reset();
-                if (image_counter < Data::image_items.size())
+                Singletons::image_optional.reset();
+                if (image_counter < max_image_counter)
                 {
-                    image_optional = Data::image_items[image_counter].create_bg(0, 0);
+                    Singletons::image_optional = Data::image_items[image_counter].create_bg(0, 0);
                 }
             }
+            // Update
             audio_frames++;
             image_frames++;
             bn::core::update();
         }
 
-        image_optional.reset();
-        image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+        // Return to Menu
+        Singletons::sound_handler.get()->stop();
+        Singletons::image_optional.reset();
+        Singletons::image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
     }
 
 }
+
+// TODO STATE MACHINE FOR EASIER UPDATE AND STATE MANAGING, ANIMATIONS ETC
+// Posible states:
+/*
+    MENU
+        ANIMATION -> VIDEOCLIP ->? RETURN MENU
+        ANIMATION -> ALBUM MENU ->? RETURN MENU
+            PLAYING SONG ->? STOP SONG
+*/
 
 int main()
 {
     bn::core::init();
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
-    // Wigle variables
-    bn::fixed angle = 360;
-    const bn::fixed angle_inc = 4;
-
-    const bn::string<32> TextBandName = "VVV -Trippin'you-";
-    const bn::string<32> TextAlbumName = "- Vaciador -";
-
-    const bn::string<32> TextAlbum = "Escuchar Album";
-    const bn::string<32> TextVideoclip = "Ver Videoclip - KLF";
+    Singletons::image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
 
     uint8_t SelectedOption = 0;
-    const uint8_t NumberOptionsMenu = 2;
-
-    const bn::array<bn::string<32>, 2> MenuTexts = {TextAlbum, TextVideoclip};
-
-    bn::vector<bn::sprite_ptr, 32> TextSprites;
-    bn::vector<bn::sprite_ptr, 32> SelectedTextSprites;
-
-    // Background pointer
-    bn::optional<bn::regular_bg_ptr> image_optional;
-    image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
 
     while (true)
     {
-        TextSprites.clear();
-        SelectedTextSprites.clear();
-        
-        // Generate static texts
-        Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-        Singletons::TextGenerator.generate(-50, -50, TextBandName, TextSprites);
-        Singletons::TextGenerator.generate(-40, -40, TextAlbumName, TextSprites);
+        // Clear Texts
+        Singletons::TextSprites.clear();
+        Singletons::SelectedTextSprites.clear();
 
-        // WIP Keypad
-        if (bn::keypad::up_pressed())
+        // Generate Menu static texts
+        Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
+        Singletons::TextGenerator.generate(-50, -50, Data::TextBandName, Singletons::TextSprites);
+        Singletons::TextGenerator.generate(-40, -40, Data::TextAlbumName, Singletons::TextSprites);
+
+        // Menu Keypad
+        if (bn::keypad::up_pressed() || bn::keypad::down_pressed())
         {
-            SelectedOption = 0;
-        }
-        if (bn::keypad::down_pressed())
-        {
-            SelectedOption = 1;
+            SelectedOption = 1 - SelectedOption;
         }
         if (bn::keypad::a_pressed())
         {
-            if (SelectedOption == 1)
+            switch (SelectedOption)
             {
-                TextSprites.clear();
-                SelectedTextSprites.clear();
-                process_videoclip(image_optional);
-            }
-            if (SelectedOption == 0)
-            {
-                TextSprites.clear();
-                SelectedTextSprites.clear();
-                album_selection(TextSprites, SelectedTextSprites, angle, angle_inc);
+            case 0:
+                Singletons::TextSprites.clear();
+                Singletons::SelectedTextSprites.clear();
+                album_selection();
+                break;
+            case 1:
+                Singletons::TextSprites.clear();
+                Singletons::SelectedTextSprites.clear();
+                process_videoclip();
+                break;
+            default:
+                Singletons::TextSprites.clear();
+                Singletons::SelectedTextSprites.clear();
+                break;
             }
         }
 
-        selected_option(SelectedOption, NumberOptionsMenu, TextSprites, SelectedTextSprites, MenuTexts, angle, angle_inc);
+        // Menu Text animation
+        selected_option_menu(SelectedOption);
 
+        // Update
         bn::core::update();
     }
 }
