@@ -249,14 +249,25 @@
 
 namespace Data
 {
+    // States
+    enum STATES
+    {
+        MENU,
+        VIDEOCLIP,
+        SONG_MENU
+    };
 
-    // Wigle variables
-    bn::fixed angle = 360;
-    const bn::fixed angle_inc = 4;
+    uint8_t CurrentState = STATES::MENU;
 
-    const uint8_t max_image_frames = 60;
-    const uint16_t max_audio_frames = 900;
+    // Animations
+    bn::fixed Angle = 360;
+    const bn::fixed AngleIncrement = 4;
 
+    // Limits
+    const uint8_t MaxImageFrames = 60;
+    const uint16_t MaxAudioFrames = 900;
+
+    // Texts
     const bn::string<32> TextBandName = "VVV -Trippin'you-";
     const bn::string<32> TextAlbumName = "- Vaciador -";
 
@@ -265,18 +276,19 @@ namespace Data
 
     const bn::array<bn::string<32>, 2> MenuTexts = {TextAlbum, TextVideoclip};
 
-    const bn::string<32> vvv_01 = "Zugzwang";
-    const bn::string<32> vvv_02 = "El Ángel de la Historia";
-    const bn::string<32> vvv_03 = "Mediocres y Agresivos";
-    const bn::string<32> vvv_04 = "Hikutsu";
-    const bn::string<32> vvv_05 = "Rush";
-    const bn::string<32> vvv_06 = "Bellver";
-    const bn::string<32> vvv_07 = "KLF";
-    const bn::string<32> vvv_08 = "La Grieta";
-    const bn::string<32> vvv_09 = "Ctrl + Alt + Supr";
+    const bn::string<32> VVV01 = "Zugzwang";
+    const bn::string<32> VVV02 = "El Ángel de la Historia";
+    const bn::string<32> VVV03 = "Mediocres y Agresivos";
+    const bn::string<32> VVV04 = "Hikutsu";
+    const bn::string<32> VVV05 = "Rush";
+    const bn::string<32> VVV06 = "Bellver";
+    const bn::string<32> VVV07 = "KLF";
+    const bn::string<32> VVV08 = "La Grieta";
+    const bn::string<32> VVV09 = "Ctrl + Alt + Supr";
 
-    const bn::array<bn::string<32>, 9> AlbumTexts = {vvv_01, vvv_02, vvv_03, vvv_04, vvv_05, vvv_06, vvv_07, vvv_08, vvv_09};
+    const bn::array<bn::string<32>, 9> AlbumTexts = {VVV01, VVV02, VVV03, VVV04, VVV05, VVV06, VVV07, VVV08, VVV09};
 
+    // Songs
     const constexpr bn::array<uint8_t, 18> SongsIndexs =
         {
             0, 15,
@@ -301,7 +313,7 @@ namespace Data
             16200,
             7140};
 
-    const constexpr bn::array<bn::sound_item, 134> audio_items =
+    const constexpr bn::array<bn::sound_item, 134> AudioItems =
         {
             // 0 - 15
             bn::sound_items::vvv_01_zugzwang_000,
@@ -447,7 +459,8 @@ namespace Data
             bn::sound_items::vvv_09_ctrlaltsupr_006,
             bn::sound_items::vvv_09_ctrlaltsupr_007};
 
-    const constexpr bn::array<bn::regular_bg_item, 242> image_items =
+    // Videoclip
+    const constexpr bn::array<bn::regular_bg_item, 242> ImageItems =
         {
             bn::regular_bg_items::v_klf_001,
             bn::regular_bg_items::v_klf_002,

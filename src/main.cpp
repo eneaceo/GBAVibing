@@ -18,67 +18,125 @@
 
 namespace
 {
-
-    void selected_option_menu(const uint8_t SelectedOption)
+    // Animate the current selected option in the menu
+    void selected_option_menu(const uint8_t aSelectedOption)
     {
-
-        for (uint8_t option = 0; option < Data::MenuTexts.size(); ++option)
+        for (uint8_t Option = 0; Option < Data::MenuTexts.size(); ++Option)
         {
-            if (option != SelectedOption)
+            if (Option != aSelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(0, 15 * option, Data::MenuTexts[option], Singletons::TextSprites);
+                Singletons::TextGenerator.generate(0, 15 * Option, Data::MenuTexts[Option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(0, 15 * option, Data::MenuTexts[option], Singletons::SelectedTextSprites);
+                Singletons::TextGenerator.generate(0, 15 * Option, Data::MenuTexts[Option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
-
-        Functions::text_wigle(SelectedOption, 0);
+        
+        Functions::TextWigle(aSelectedOption);
     }
 
-    void selected_option_album(const uint8_t SelectedOption)
+    // Animate the current selected option in the album menu
+    void selected_option_album(const uint8_t aSelectedOption)
     {
-
-        for (uint8_t option = 0; option < Data::AlbumTexts.size(); ++option)
+        for (uint8_t Option = 0; Option < Data::AlbumTexts.size(); ++Option)
         {
-            if (option != SelectedOption)
+            if (Option != aSelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(-40, -50 + (15 * option), Data::AlbumTexts[option], Singletons::TextSprites);
+                Singletons::TextGenerator.generate(-40, -50 + (15 * Option), Data::AlbumTexts[Option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(-20, -50 + (15 * option), Data::AlbumTexts[option], Singletons::SelectedTextSprites);
+                Singletons::TextGenerator.generate(-20, -50 + (15 * Option), Data::AlbumTexts[Option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
 
-        Functions::text_wigle(SelectedOption, -50);
+        Functions::TextWigle(aSelectedOption, -50);
     }
 
-    void album_selection()
+    // SONG PLAYING SCENE
+    void PlaySong(const uint8_t aSelectedOption)
     {
-        uint8_t SelectedOption = 0;
+
+        Singletons::TextSprites.clear();
+        Singletons::SelectedTextSprites.clear();
+
+        // TODO
+        // Name of the song playing
+        // Background animation
+
+        uint8_t AudioCounter = GetSongStart(aSelectedOption);
+        uint8_t MaxAudioCounter = GetSongEnd(aSelectedOption);
+
+        uint16_t AudioFrames = 0;
+        uint16_t MaxTotalFrames = GetSongFrames(aSelectedOption);
+
+        Singletons::SoundHandler.get()->stop();
+        Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
+
+        for (uint32_t frame = 0; frame < MaxTotalFrames; frame++)
+        {
+            if (bn::keypad::b_pressed())
+            {
+                break;
+            }
+            
+            if (AudioFrames == Data::MaxAudioFrames)
+            {
+                AudioFrames = 0;
+                AudioCounter++;
+                if (AudioCounter <= MaxAudioCounter)
+                {
+                    Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
+                }
+            }
+
+            AudioFrames++;
+            bn::core::update();
+        }
+
+        Singletons::SoundHandler.get()->stop();
+    };
+
+    // SONG MENU SCENE
+    void SongSelection()
+    {
+        Singletons::SoundHandler.get()->stop();
+        Singletons::ImageOptional.reset();
+
+        Singletons::ImageOptional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+
+        // TODO
+        // Background animation
+        // Better Texts positions
+
         const uint8_t NumberOptionsMenu = Data::AlbumTexts.size();
+        uint8_t SelectedOption = 0;
 
-        bool waited = false;
-        bool loop = true;
-        while (loop)
+        bool Playing = false;
+        uint8_t AudioCounter = 0;
+        uint8_t MaxAudioCounter = 0;
+        uint16_t AudioFrames = 0;
+        uint32_t Frames = 0;
+        uint16_t MaxTotalFrames = 0;
+        
+        while (Data::CurrentState == Data::STATES::SONG_MENU)
         {
             Singletons::TextSprites.clear();
             Singletons::SelectedTextSprites.clear();
 
-            // Generate static texts
             Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
 
-            // WIP Keypad
+            selected_option_album(SelectedOption);
+            
             if (bn::keypad::down_pressed())
             {
                 SelectedOption = (SelectedOption + 1) % NumberOptionsMenu;
@@ -88,150 +146,146 @@ namespace
                 SelectedOption = (SelectedOption + NumberOptionsMenu - 1) % NumberOptionsMenu;
             }
 
+            if (bn::keypad::a_pressed())
+            {
+                PlaySong(SelectedOption);
+            }
+
             if (bn::keypad::b_pressed())
             {
-                loop = false;
+                Data::CurrentState = Data::STATES::MENU;
             }
-
-            if (bn::keypad::a_pressed() && waited && loop)
-            {
-                Functions::play_song(SelectedOption);
-            }
-
-            selected_option_album(SelectedOption);
 
             bn::core::update();
-
-            // FUCK THIS
-            for (int i = 0; i < 60; ++i)
-            {
-                waited = true;
-            }
         }
     }
 
-    void process_videoclip()
+    // VIDEOCLIP SCENE
+    void ProcessVideoclip()
     {
-        // Videoclip variables
-        uint8_t image_counter = 0;
-        uint16_t max_image_counter = Data::image_items.size();
+        Singletons::ImageOptional.reset();
+        Singletons::SoundHandler.get()->stop();
+        Singletons::TextSprites.clear();
+        Singletons::SelectedTextSprites.clear();
+        
+        uint8_t ImageCounter = 0;
+        uint16_t MaxImageCounter = Data::ImageItems.size();
 
-        uint8_t audio_counter = Functions::GetSongStart(6);
-        uint8_t max_audio_counter = Functions::GetSongEnd(6);
+        uint8_t AudioCounter = Functions::GetSongStart(6);
+        uint8_t MaxAudioCounter = Functions::GetSongEnd(6);
 
-        uint8_t image_frames = 0;
-        uint16_t audio_frames = 0;
-        uint16_t max_total_frames = Functions::GetSongFrames(6);
+        uint8_t ImageFrames = 0;
+        uint16_t AudioFrames = 0;
+        uint16_t MaxTotalFrames = Functions::GetSongFrames(6);
 
-        // Reset background and audio
-        Singletons::image_optional.reset();
-        Singletons::sound_handler.get()->stop();
+        Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
+        Singletons::ImageOptional = Data::ImageItems[ImageCounter].create_bg(0, 0);
 
-        Singletons::sound_handler = Data::audio_items[audio_counter].play();
-        Singletons::image_optional = Data::image_items[image_counter].create_bg(0, 0);
-
-        // Loop
-        for (uint16_t frame = 0; frame < max_total_frames; frame++)
+        for (uint16_t frame = 0; frame < MaxTotalFrames; frame++)
         {
-            // Return
+            if (AudioFrames == Data::MaxAudioFrames)
+            {
+                AudioFrames = 0;
+                AudioCounter++;
+                if (AudioCounter <= MaxAudioCounter)
+                {
+                    Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
+                }
+            }
+
+            if (ImageFrames == Data::MaxImageFrames)
+            {
+                ImageFrames = 0;
+                ImageCounter++;
+                Singletons::ImageOptional.reset();
+                if (ImageCounter < MaxImageCounter)
+                {
+                    Singletons::ImageOptional = Data::ImageItems[ImageCounter].create_bg(0, 0);
+                }
+            }
+
+            AudioFrames++;
+            ImageFrames++;
+            bn::core::update();
+
             if (bn::keypad::b_pressed())
             {
                 break;
             }
-            // Audio check
-            if (audio_frames == Data::max_audio_frames)
-            {
-                audio_frames = 0;
-                audio_counter++;
-                if (audio_counter <= max_audio_counter)
-                {
-                    Singletons::sound_handler = Data::audio_items[audio_counter].play();
-                }
-            }
-            // Image check
-            if (image_frames == Data::max_image_frames)
-            {
-                image_frames = 0;
-                image_counter++;
-                Singletons::image_optional.reset();
-                if (image_counter < max_image_counter)
-                {
-                    Singletons::image_optional = Data::image_items[image_counter].create_bg(0, 0);
-                }
-            }
-            // Update
-            audio_frames++;
-            image_frames++;
-            bn::core::update();
         }
 
-        // Return to Menu
-        Singletons::sound_handler.get()->stop();
-        Singletons::image_optional.reset();
-        Singletons::image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+        Data::CurrentState = Data::STATES::MENU;
+    }
+
+    // MAIN MENU SCENE
+    void MainMenu()
+    {
+        Singletons::SoundHandler.get()->stop();
+        Singletons::ImageOptional.reset();
+
+        Singletons::ImageOptional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+
+        // TODO
+        // Background animation
+        // Better Texts positions
+        
+        uint8_t SelectedOption = 0;
+
+        while (Data::CurrentState == Data::STATES::MENU)
+        {
+            Singletons::TextSprites.clear();
+            Singletons::SelectedTextSprites.clear();
+
+            Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
+            Singletons::TextGenerator.generate(-50, -50, Data::TextBandName, Singletons::TextSprites);
+            Singletons::TextGenerator.generate(-40, -40, Data::TextAlbumName, Singletons::TextSprites);
+
+            selected_option_menu(SelectedOption);
+            
+            if (bn::keypad::up_pressed() || bn::keypad::down_pressed())
+            {
+                SelectedOption = 1 - SelectedOption;
+            }
+            
+            if (bn::keypad::a_pressed())
+            {
+                switch (SelectedOption)
+                {
+                case 0:
+                    Data::CurrentState = Data::STATES::SONG_MENU;
+                    break;
+                case 1:
+                    Data::CurrentState = Data::STATES::VIDEOCLIP;
+                    break;
+                }
+            }
+
+            bn::core::update();
+        }
     }
 
 }
-
-// TODO STATE MACHINE FOR EASIER UPDATE AND STATE MANAGING, ANIMATIONS ETC
-// Posible states:
-/*
-    MENU
-        ANIMATION -> VIDEOCLIP ->? RETURN MENU
-        ANIMATION -> ALBUM MENU ->? RETURN MENU
-            PLAYING SONG ->? STOP SONG
-*/
 
 int main()
 {
     bn::core::init();
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
-    Singletons::image_optional = bn::regular_bg_items::background_menu.create_bg(0, 0);
-
-    uint8_t SelectedOption = 0;
-
     while (true)
     {
-        // Clear Texts
-        Singletons::TextSprites.clear();
-        Singletons::SelectedTextSprites.clear();
-
-        // Generate Menu static texts
-        Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-        Singletons::TextGenerator.generate(-50, -50, Data::TextBandName, Singletons::TextSprites);
-        Singletons::TextGenerator.generate(-40, -40, Data::TextAlbumName, Singletons::TextSprites);
-
-        // Menu Keypad
-        if (bn::keypad::up_pressed() || bn::keypad::down_pressed())
+        switch(Data::CurrentState)
         {
-            SelectedOption = 1 - SelectedOption;
-        }
-        if (bn::keypad::a_pressed())
-        {
-            switch (SelectedOption)
-            {
-            case 0:
-                Singletons::TextSprites.clear();
-                Singletons::SelectedTextSprites.clear();
-                album_selection();
-                break;
-            case 1:
-                Singletons::TextSprites.clear();
-                Singletons::SelectedTextSprites.clear();
-                process_videoclip();
-                break;
-            default:
-                Singletons::TextSprites.clear();
-                Singletons::SelectedTextSprites.clear();
-                break;
-            }
+            case Data::STATES::MENU:
+                MainMenu();
+            break;
+            case Data::STATES::VIDEOCLIP:
+                ProcessVideoclip();
+            break;
+            case Data::STATES::SONG_MENU:
+                SongSelection();
+            break;
         }
 
-        // Menu Text animation
-        selected_option_menu(SelectedOption);
-
-        // Update
         bn::core::update();
     }
 }

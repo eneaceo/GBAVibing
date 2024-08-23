@@ -11,13 +11,15 @@ namespace Singletons
     // Texts generator
     inline bn::sprite_text_generator TextGenerator(common::variable_8x16_sprite_font);
 
+    // Text sprites
     bn::vector<bn::sprite_ptr, 32> TextSprites;
     bn::vector<bn::sprite_ptr, 32> SelectedTextSprites;
 
     // Background pointer
-    bn::optional<bn::regular_bg_ptr> image_optional;
+    bn::optional<bn::regular_bg_ptr> ImageOptional;
+
     // Audio pointer
-    bn::optional<bn::sound_handle> sound_handler;
+    bn::optional<bn::sound_handle> SoundHandler;
 
 }
 

@@ -9,94 +9,59 @@ namespace Functions
 
     static uint16_t GetSongFrames(const uint8_t aSongNumber)
     {
-        uint16_t ret = 0;
-        uint8_t index = aSongNumber;
-        if (index < Data::SongFrames.size())
+        uint16_t Ret = 0;
+        uint8_t Index = aSongNumber;
+        if (Index < Data::SongFrames.size())
         {
-            ret = Data::SongFrames[index];
+            Ret = Data::SongFrames[Index];
         }
-        return ret;
+        return Ret;
     };
 
     static uint8_t GetSongStart(const uint8_t aSongNumber)
     {
-        uint8_t ret = 0;
-        uint8_t index = aSongNumber * 2;
-        if (index < Data::SongsIndexs.size())
+        uint8_t Ret = 0;
+        uint8_t Index = aSongNumber * 2;
+        if (Index < Data::SongsIndexs.size())
         {
-            ret = Data::SongsIndexs[index];
+            Ret = Data::SongsIndexs[Index];
         }
-        return ret;
+        return Ret;
     };
 
     static uint8_t GetSongEnd(const uint8_t aSongNumber)
     {
-        uint8_t ret = 0;
-        uint8_t index = (aSongNumber * 2) + 1;
-        if (index < Data::SongsIndexs.size())
+        uint8_t Ret = 0;
+        uint8_t Index = (aSongNumber * 2) + 1;
+        if (Index < Data::SongsIndexs.size())
         {
-            ret = Data::SongsIndexs[index];
+            Ret = Data::SongsIndexs[Index];
         }
-        return ret;
+        return Ret;
     };
 
-    static void text_wigle(const uint8_t SelectedOption, const int8_t PositionOffset)
+    static void TextWigle(const uint8_t aSelectedOption, const int8_t aPositionOffset = 0)
     {
-        Data::angle -= Data::angle_inc;
+        Data::Angle -= Data::AngleIncrement;
 
-        if (Data::angle == 0)
+        if (Data::Angle == 0)
         {
-            Data::angle += 360;
+            Data::Angle += 360;
         }
 
-        bn::fixed local_angle = Data::angle;
+        bn::fixed LocalAngle = Data::Angle;
 
         for (bn::sprite_ptr &SelectedTextSprite : Singletons::SelectedTextSprites)
         {
-            local_angle += Data::angle_inc * 4;
+            LocalAngle += Data::AngleIncrement * 4;
 
-            if (local_angle >= 360)
+            if (LocalAngle >= 360)
             {
-                local_angle -= 360;
+                LocalAngle -= 360;
             }
 
-            SelectedTextSprite.set_y(PositionOffset + SelectedOption * 15 + bn::degrees_lut_sin(local_angle) * 2);
+            SelectedTextSprite.set_y(aPositionOffset + aSelectedOption * 15 + bn::degrees_lut_sin(LocalAngle) * 2);
         }
-    };
-
-    static void play_song(const uint8_t SelectedOption)
-    {
-        uint8_t audio_counter = GetSongStart(SelectedOption);
-        uint8_t max_audio_counter = GetSongEnd(SelectedOption);
-
-        uint16_t audio_frames = 0;
-        uint16_t max_total_frames = GetSongFrames(SelectedOption);
-
-        Singletons::sound_handler.get()->stop();
-        Singletons::sound_handler = Data::audio_items[audio_counter].play();
-
-        for (uint32_t frame = 0; frame < max_total_frames; frame++)
-        {
-            if (bn::keypad::b_pressed())
-            {
-                break;
-            }
-            
-            if (audio_frames == Data::max_audio_frames)
-            {
-                audio_frames = 0;
-                audio_counter++;
-                if (audio_counter <= max_audio_counter)
-                {
-                    Singletons::sound_handler = Data::audio_items[audio_counter].play();
-                }
-            }
-
-            audio_frames++;
-            bn::core::update();
-        }
-
-        Singletons::sound_handler.get()->stop();
     };
 
 }
