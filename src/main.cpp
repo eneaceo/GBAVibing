@@ -270,6 +270,14 @@ namespace
 
 int main()
 {
+    // TODO -> New Album
+    // TODO -> No videoclip
+    // TODO -> Better background animations
+    // TODO -> Better text animations
+    // TODO -> Music Player like behavior?
+    // TODO -> Change song automatically?
+    // TODO -> Better scene/state handling, only one loop?
+
     bn::core::init();
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
