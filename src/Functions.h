@@ -60,10 +60,39 @@ namespace Functions
                 LocalAngle -= 360;
             }
 
-            SelectedTextSprite.set_y(aPositionOffset + aSelectedOption * 15 + bn::degrees_lut_sin(LocalAngle) * 2);
+            SelectedTextSprite.set_y(aPositionOffset + aSelectedOption * Data::TextSeparation + bn::degrees_lut_sin(LocalAngle) * 2);
         }
     };
 
+    static void AnimateBackground()
+    {
+        if (Data::AnimatingBackground)
+        {
+            if (Singletons::Random.get_int(Data::AnimationVariation) == 0)
+            {
+                Singletons::ImageOptional.reset();
+                Singletons::ImageOptional = Data::BackgroundItems[Singletons::Random.get_int(Data::BackgroundItems.size())].create_bg(0, 0);
+            }
+            if (Data::BackgroundAnimationFrames > Data::BackgroundAnimationPlaying)
+            {
+                Data::AnimatingBackground = false;
+                Data::BackgroundAnimationFrames = 0;
+                Data::BackgroundAnimationPause = 60 * Singletons::Random.get_int(Data::BackgroundAnimationPauseTime);
+                Singletons::ImageOptional.reset();
+                Singletons::ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
+            }
+        }
+        else
+        {
+            if (Data::BackgroundAnimationFrames > Data::BackgroundAnimationPause)
+            {
+                Data::AnimatingBackground = true;
+                Data::BackgroundAnimationFrames = 0;
+                Data::BackgroundAnimationPlaying = 30 * Singletons::Random.get_int(Data::BackgroundAnimationPlayingTime);
+            }
+        }
+        Data::BackgroundAnimationFrames++;
+    };
 }
 
 #endif

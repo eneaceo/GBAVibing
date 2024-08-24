@@ -1,6 +1,7 @@
 #ifndef SINGLETONS_H
 #define SINGLETONS_H
 
+#include "bn_random.h"
 // Texts includes
 #include "bn_sprite_text_generator.h"
 #include "common_variable_8x16_sprite_font.h"
@@ -20,6 +21,9 @@ namespace Singletons
 
     // Audio pointer
     bn::optional<bn::sound_handle> SoundHandler;
+
+    //Random
+    bn::random Random;
 
 }
 

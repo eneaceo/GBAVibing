@@ -14,8 +14,6 @@
 #include "Functions.h"
 #include "Singletons.h"
 
-#include "bn_regular_bg_items_background_menu.h"
-
 namespace
 {
     // Animate the current selected option in the menu
@@ -26,40 +24,41 @@ namespace
             if (Option != aSelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(0, 15 * Option, Data::MenuTexts[Option], Singletons::TextSprites);
+                Singletons::TextGenerator.generate(0, Data::TextSeparation * Option, Data::MenuTexts[Option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(0, 15 * Option, Data::MenuTexts[Option], Singletons::SelectedTextSprites);
+                Singletons::TextGenerator.generate(0, Data::TextSeparation * Option, Data::MenuTexts[Option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
-        
+
         Functions::TextWigle(aSelectedOption);
     }
 
     // Animate the current selected option in the album menu
     void selected_option_album(const uint8_t aSelectedOption)
     {
+        const int8_t YOffset = -60;
         for (uint8_t Option = 0; Option < Data::AlbumTexts.size(); ++Option)
         {
             if (Option != aSelectedOption)
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-                Singletons::TextGenerator.generate(-40, -50 + (15 * Option), Data::AlbumTexts[Option], Singletons::TextSprites);
+                Singletons::TextGenerator.generate(-100, YOffset + (Data::TextSeparation * Option), Data::AlbumTexts[Option], Singletons::TextSprites);
             }
             else
             {
                 Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
                 Singletons::TextGenerator.set_one_sprite_per_character(true);
-                Singletons::TextGenerator.generate(-20, -50 + (15 * Option), Data::AlbumTexts[Option], Singletons::SelectedTextSprites);
+                Singletons::TextGenerator.generate(-80, YOffset + (Data::TextSeparation * Option), Data::AlbumTexts[Option], Singletons::SelectedTextSprites);
                 Singletons::TextGenerator.set_one_sprite_per_character(false);
             }
         }
 
-        Functions::TextWigle(aSelectedOption, -50);
+        Functions::TextWigle(aSelectedOption, YOffset);
     }
 
     // SONG PLAYING SCENE
@@ -69,15 +68,16 @@ namespace
         Singletons::TextSprites.clear();
         Singletons::SelectedTextSprites.clear();
 
-        // TODO
-        // Name of the song playing
-        // Background animation
+        Singletons::TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
 
-        uint8_t AudioCounter = GetSongStart(aSelectedOption);
-        uint8_t MaxAudioCounter = GetSongEnd(aSelectedOption);
+        Singletons::TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
+        Singletons::TextGenerator.generate(0, 0, Data::AlbumTexts[aSelectedOption], Singletons::SelectedTextSprites);
+
+        uint8_t AudioCounter = Functions::GetSongStart(aSelectedOption);
+        uint8_t MaxAudioCounter = Functions::GetSongEnd(aSelectedOption);
 
         uint16_t AudioFrames = 0;
-        uint16_t MaxTotalFrames = GetSongFrames(aSelectedOption);
+        uint16_t MaxTotalFrames = Functions::GetSongFrames(aSelectedOption);
 
         Singletons::SoundHandler.get()->stop();
         Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
@@ -88,7 +88,7 @@ namespace
             {
                 break;
             }
-            
+
             if (AudioFrames == Data::MaxAudioFrames)
             {
                 AudioFrames = 0;
@@ -100,10 +100,12 @@ namespace
             }
 
             AudioFrames++;
+            Functions::AnimateBackground();
             bn::core::update();
         }
 
         Singletons::SoundHandler.get()->stop();
+        Singletons::TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::LEFT);
     };
 
     // SONG MENU SCENE
@@ -112,22 +114,14 @@ namespace
         Singletons::SoundHandler.get()->stop();
         Singletons::ImageOptional.reset();
 
-        Singletons::ImageOptional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+        Singletons::TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::LEFT);
 
-        // TODO
-        // Background animation
-        // Better Texts positions
+        Singletons::ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
 
         const uint8_t NumberOptionsMenu = Data::AlbumTexts.size();
         uint8_t SelectedOption = 0;
+        bool PlayingSong = false;
 
-        bool Playing = false;
-        uint8_t AudioCounter = 0;
-        uint8_t MaxAudioCounter = 0;
-        uint16_t AudioFrames = 0;
-        uint32_t Frames = 0;
-        uint16_t MaxTotalFrames = 0;
-        
         while (Data::CurrentState == Data::STATES::SONG_MENU)
         {
             Singletons::TextSprites.clear();
@@ -136,7 +130,7 @@ namespace
             Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
 
             selected_option_album(SelectedOption);
-            
+
             if (bn::keypad::down_pressed())
             {
                 SelectedOption = (SelectedOption + 1) % NumberOptionsMenu;
@@ -148,14 +142,23 @@ namespace
 
             if (bn::keypad::a_pressed())
             {
+                PlayingSong = true;
                 PlaySong(SelectedOption);
             }
 
             if (bn::keypad::b_pressed())
             {
-                Data::CurrentState = Data::STATES::MENU;
+                if (PlayingSong)
+                {
+                    PlayingSong = false;
+                }
+                else
+                {
+                    Data::CurrentState = Data::STATES::MENU;
+                }
             }
 
+            Functions::AnimateBackground();
             bn::core::update();
         }
     }
@@ -167,7 +170,7 @@ namespace
         Singletons::SoundHandler.get()->stop();
         Singletons::TextSprites.clear();
         Singletons::SelectedTextSprites.clear();
-        
+
         uint8_t ImageCounter = 0;
         uint16_t MaxImageCounter = Data::ImageItems.size();
 
@@ -223,12 +226,10 @@ namespace
         Singletons::SoundHandler.get()->stop();
         Singletons::ImageOptional.reset();
 
-        Singletons::ImageOptional = bn::regular_bg_items::background_menu.create_bg(0, 0);
+        Singletons::TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
 
-        // TODO
-        // Background animation
-        // Better Texts positions
-        
+        Singletons::ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
+
         uint8_t SelectedOption = 0;
 
         while (Data::CurrentState == Data::STATES::MENU)
@@ -237,16 +238,16 @@ namespace
             Singletons::SelectedTextSprites.clear();
 
             Singletons::TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-            Singletons::TextGenerator.generate(-50, -50, Data::TextBandName, Singletons::TextSprites);
-            Singletons::TextGenerator.generate(-40, -40, Data::TextAlbumName, Singletons::TextSprites);
+            Singletons::TextGenerator.generate(0, -40, Data::TextBandName, Singletons::TextSprites);
+            Singletons::TextGenerator.generate(0, -30, Data::TextAlbumName, Singletons::TextSprites);
 
             selected_option_menu(SelectedOption);
-            
+
             if (bn::keypad::up_pressed() || bn::keypad::down_pressed())
             {
                 SelectedOption = 1 - SelectedOption;
             }
-            
+
             if (bn::keypad::a_pressed())
             {
                 switch (SelectedOption)
@@ -260,6 +261,7 @@ namespace
                 }
             }
 
+            Functions::AnimateBackground();
             bn::core::update();
         }
     }
@@ -273,16 +275,16 @@ int main()
 
     while (true)
     {
-        switch(Data::CurrentState)
+        switch (Data::CurrentState)
         {
-            case Data::STATES::MENU:
-                MainMenu();
+        case Data::STATES::MENU:
+            MainMenu();
             break;
-            case Data::STATES::VIDEOCLIP:
-                ProcessVideoclip();
+        case Data::STATES::VIDEOCLIP:
+            ProcessVideoclip();
             break;
-            case Data::STATES::SONG_MENU:
-                SongSelection();
+        case Data::STATES::SONG_MENU:
+            SongSelection();
             break;
         }
 

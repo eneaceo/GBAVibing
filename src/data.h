@@ -244,6 +244,29 @@
 #include "bn_regular_bg_items_v_klf_241.h"
 #include "bn_regular_bg_items_v_klf_242.h"
 
+#include "bn_regular_bg_items_background.h"
+#include "bn_regular_bg_items_background_0.h"
+#include "bn_regular_bg_items_background_1.h"
+#include "bn_regular_bg_items_background_2.h"
+#include "bn_regular_bg_items_background_3.h"
+#include "bn_regular_bg_items_background_4.h"
+#include "bn_regular_bg_items_background_5.h"
+#include "bn_regular_bg_items_background_6.h"
+#include "bn_regular_bg_items_background_7.h"
+#include "bn_regular_bg_items_background_8.h"
+#include "bn_regular_bg_items_background_9.h"
+#include "bn_regular_bg_items_background_10.h"
+#include "bn_regular_bg_items_background_11.h"
+#include "bn_regular_bg_items_background_12.h"
+#include "bn_regular_bg_items_background_13.h"
+#include "bn_regular_bg_items_background_14.h"
+#include "bn_regular_bg_items_background_15.h"
+#include "bn_regular_bg_items_background_16.h"
+#include "bn_regular_bg_items_background_17.h"
+#include "bn_regular_bg_items_background_18.h"
+#include "bn_regular_bg_items_background_19.h"
+#include "bn_regular_bg_items_background_20.h"
+
 #include "bn_regular_bg_item.h"
 #include "bn_sound_items.h"
 
@@ -263,11 +286,20 @@ namespace Data
     bn::fixed Angle = 360;
     const bn::fixed AngleIncrement = 4;
 
+    bool AnimatingBackground = false;
+    const uint8_t BackgroundAnimationPauseTime = 8;
+    const uint8_t BackgroundAnimationPlayingTime = 3;
+    const uint8_t AnimationVariation = 8;
+    uint8_t BackgroundAnimationPause = 60;
+    uint8_t BackgroundAnimationPlaying = 30;
+    uint8_t BackgroundAnimationFrames = 0;
+
     // Limits
     const uint8_t MaxImageFrames = 60;
     const uint16_t MaxAudioFrames = 900;
 
     // Texts
+    const uint8_t TextSeparation = 15;
     const bn::string<32> TextBandName = "VVV -Trippin'you-";
     const bn::string<32> TextAlbumName = "- Vaciador -";
 
@@ -287,6 +319,31 @@ namespace Data
     const bn::string<32> VVV09 = "Ctrl + Alt + Supr";
 
     const bn::array<bn::string<32>, 9> AlbumTexts = {VVV01, VVV02, VVV03, VVV04, VVV05, VVV06, VVV07, VVV08, VVV09};
+
+    // Background
+    const constexpr bn::array<bn::regular_bg_item, 21> BackgroundItems =
+        {
+            bn::regular_bg_items::background_0,
+            bn::regular_bg_items::background_1,
+            bn::regular_bg_items::background_2,
+            bn::regular_bg_items::background_3,
+            bn::regular_bg_items::background_4,
+            bn::regular_bg_items::background_5,
+            bn::regular_bg_items::background_6,
+            bn::regular_bg_items::background_7,
+            bn::regular_bg_items::background_8,
+            bn::regular_bg_items::background_9,
+            bn::regular_bg_items::background_10,
+            bn::regular_bg_items::background_11,
+            bn::regular_bg_items::background_12,
+            bn::regular_bg_items::background_13,
+            bn::regular_bg_items::background_14,
+            bn::regular_bg_items::background_15,
+            bn::regular_bg_items::background_16,
+            bn::regular_bg_items::background_17,
+            bn::regular_bg_items::background_18,
+            bn::regular_bg_items::background_19,
+            bn::regular_bg_items::background_20};
 
     // Songs
     const constexpr bn::array<uint8_t, 18> SongsIndexs =
