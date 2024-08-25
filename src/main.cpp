@@ -163,63 +163,6 @@ namespace
         }
     }
 
-    // VIDEOCLIP SCENE
-    void ProcessVideoclip()
-    {
-        Singletons::ImageOptional.reset();
-        Singletons::SoundHandler.get()->stop();
-        Singletons::TextSprites.clear();
-        Singletons::SelectedTextSprites.clear();
-
-        uint8_t ImageCounter = 0;
-        uint16_t MaxImageCounter = Data::ImageItems.size();
-
-        uint8_t AudioCounter = Functions::GetSongStart(6);
-        uint8_t MaxAudioCounter = Functions::GetSongEnd(6);
-
-        uint8_t ImageFrames = 0;
-        uint16_t AudioFrames = 0;
-        uint16_t MaxTotalFrames = Functions::GetSongFrames(6);
-
-        Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
-        Singletons::ImageOptional = Data::ImageItems[ImageCounter].create_bg(0, 0);
-
-        for (uint16_t frame = 0; frame < MaxTotalFrames; frame++)
-        {
-            if (AudioFrames == Data::MaxAudioFrames)
-            {
-                AudioFrames = 0;
-                AudioCounter++;
-                if (AudioCounter <= MaxAudioCounter)
-                {
-                    Singletons::SoundHandler = Data::AudioItems[AudioCounter].play();
-                }
-            }
-
-            if (ImageFrames == Data::MaxImageFrames)
-            {
-                ImageFrames = 0;
-                ImageCounter++;
-                Singletons::ImageOptional.reset();
-                if (ImageCounter < MaxImageCounter)
-                {
-                    Singletons::ImageOptional = Data::ImageItems[ImageCounter].create_bg(0, 0);
-                }
-            }
-
-            AudioFrames++;
-            ImageFrames++;
-            bn::core::update();
-
-            if (bn::keypad::b_pressed())
-            {
-                break;
-            }
-        }
-
-        Data::CurrentState = Data::STATES::MENU;
-    }
-
     // MAIN MENU SCENE
     void MainMenu()
     {
@@ -256,7 +199,6 @@ namespace
                     Data::CurrentState = Data::STATES::SONG_MENU;
                     break;
                 case 1:
-                    Data::CurrentState = Data::STATES::VIDEOCLIP;
                     break;
                 }
             }
@@ -268,10 +210,13 @@ namespace
 
 }
 
+#include "Command.h"
+#include "InputHandler.h"
+
 int main()
 {
-    // TODO -> New Album
-    // TODO -> No videoclip
+    // TODO -> New Album, save scripts for better future
+    // TODO -> Creditos
     // TODO -> Better background animations
     // TODO -> Better text animations
     // TODO -> Music Player like behavior?
@@ -281,15 +226,31 @@ int main()
     bn::core::init();
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
+    // WIP
+    // States - menu - credits - album menu - song playing
+ 
+    std::unique_ptr<InputHandler> InputManager(new InputHandler);
+    InputManager->BindButton(InputHandler::BUTTONS::A, std::make_unique<NextStateCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::B, std::make_unique<PreviousStateCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::UP, std::make_unique<MenuUpCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::DOWN, std::make_unique<MenuDownCommand>());
+
+    while (true)
+    {
+        // update events
+        // update text
+        // update animations
+        // process input
+    };
+
+    // END WIP
+
     while (true)
     {
         switch (Data::CurrentState)
         {
         case Data::STATES::MENU:
             MainMenu();
-            break;
-        case Data::STATES::VIDEOCLIP:
-            ProcessVideoclip();
             break;
         case Data::STATES::SONG_MENU:
             SongSelection();
