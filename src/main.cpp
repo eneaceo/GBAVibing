@@ -212,6 +212,7 @@ namespace
 
 #include "Command.h"
 #include "InputHandler.h"
+#include "State.h"
 
 int main()
 {
@@ -224,23 +225,29 @@ int main()
     // TODO -> Better scene/state handling, only one loop?
 
     bn::core::init();
-    bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
+    bn::bg_palettes::set_transparent_color(bn::color(31, 0, 0));
 
     // WIP
     // States - menu - credits - album menu - song playing
  
     std::unique_ptr<InputHandler> InputManager(new InputHandler);
-    InputManager->BindButton(InputHandler::BUTTONS::A, std::make_unique<NextStateCommand>());
-    InputManager->BindButton(InputHandler::BUTTONS::B, std::make_unique<PreviousStateCommand>());
-    InputManager->BindButton(InputHandler::BUTTONS::UP, std::make_unique<MenuUpCommand>());
-    InputManager->BindButton(InputHandler::BUTTONS::DOWN, std::make_unique<MenuDownCommand>());
+    //InputManager->BindButton(InputHandler::BUTTONS::A, std::make_unique<NextStateCommand>());
+    //InputManager->BindButton(InputHandler::BUTTONS::B, std::make_unique<PreviousStateCommand>());
+    //InputManager->BindButton(InputHandler::BUTTONS::UP, std::make_unique<MenuUpCommand>());
+    //InputManager->BindButton(InputHandler::BUTTONS::DOWN, std::make_unique<MenuDownCommand>());
+
+    std::unique_ptr<StateStack> StateManager(new StateStack);
+    StateManager->Push(MainMenuState());
+
 
     while (true)
     {
         // update events
         // update text
         // update animations
-        // process input
+        StateManager->Update();
+        InputManager->HandleInput();
+        bn::core::update();
     };
 
     // END WIP
