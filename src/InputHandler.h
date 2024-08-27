@@ -3,8 +3,8 @@
 
 #include <memory>
 
-class Command;
-class Actor;
+#include "Command.h"
+#include "Actor.h"
 
 class InputHandler
 {

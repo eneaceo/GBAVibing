@@ -1,49 +1,33 @@
-#ifndef STATECOMMAND_H
-#define STATECOMMAND_H
+#ifndef STATECOMMANDS_H
+#define STATECOMMANDS_H
 
 #include "Command.h"
 #include "StateStack.h"
 
+class Actor;
+
 class NextStateCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override
-    {
-        StateStack &aStateStack = static_cast<StateStack&>(aActor);
-        aStateStack.AdvanceState();
-    };
+    void Execute(Actor &aActor) override;
 };
 
 class PreviousStateCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override
-    {
-        StateStack &aStateStack = static_cast<StateStack&>(aActor);
-        aStateStack.PreviousState();
-    };
+    void Execute(Actor &aActor) override;
 };
-
-#include "bn_bg_palettes.h"
-#include "bn_color.h"
-
 
 class MenuUpCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override
-    {
-        bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
-    };
+    void Execute(Actor &aActor) override;
 };
 
 class MenuDownCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override
-    {
-        bn::bg_palettes::set_transparent_color(bn::color(31, 31, 31));
-    };
+    void Execute(Actor &aActor) override;
 };
 
 #endif
