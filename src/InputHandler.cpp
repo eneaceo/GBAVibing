@@ -1,13 +1,8 @@
 #include "InputHandler.h"
 #include "Command.h"
+#include "Actor.h"
 
-InputHandler::InputHandler()
-    :   ButtonA(std::make_unique<NextStateCommand>()), 
-        ButtonB(std::make_unique<PreviousStateCommand>()), 
-        ButtonUp(std::make_unique<MenuUpCommand>()), 
-        ButtonDown(std::make_unique<MenuDownCommand>())
-{
-}
+#include "bn_keypad.h"
 
 void InputHandler::BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand)
 {
@@ -28,25 +23,25 @@ void InputHandler::BindButton(uint8_t aButton, std::unique_ptr<Command> aNewComm
     }
 }
 
-void InputHandler::HandleInput()
+void InputHandler::HandleInput(Actor &aActor)
 {
     if (bn::keypad::any_pressed())
     {
         if (bn::keypad::a_pressed() && ButtonA)
         {
-            ButtonA->Execute();
+            ButtonA->Execute(aActor);
         }
         else if (bn::keypad::b_pressed() && ButtonB)
         {
-            ButtonB->Execute();
+            ButtonB->Execute(aActor);
         }
         else if (bn::keypad::up_pressed() && ButtonUp)
         {
-            ButtonUp->Execute();
+            ButtonUp->Execute(aActor);
         }
         else if (bn::keypad::down_pressed() && ButtonDown)
         {
-            ButtonDown->Execute();
+            ButtonDown->Execute(aActor);
         }
     }
 }

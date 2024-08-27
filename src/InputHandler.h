@@ -2,13 +2,12 @@
 #define INPUTHANDLER_H
 
 #include <memory>
-#include "bn_keypad.h"
 
 class Command;
+class Actor;
 
 class InputHandler
 {
-
 public:
     enum BUTTONS
     {
@@ -18,11 +17,11 @@ public:
         DOWN
     };
 
-    InputHandler();
-    ~InputHandler();
+    InputHandler() {};
+    ~InputHandler() = default;
 
     void BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand);
-    void HandleInput();
+    void HandleInput(Actor &aActor);
 
 private:
     std::unique_ptr<Command> ButtonA;

@@ -210,9 +210,7 @@ namespace
 
 }
 
-#include "Command.h"
-#include "InputHandler.h"
-#include "State.h"
+#include "StateStack.h"
 
 int main()
 {
@@ -230,14 +228,13 @@ int main()
     // WIP
     // States - menu - credits - album menu - song playing
  
-    std::unique_ptr<InputHandler> InputManager(new InputHandler);
+    //std::unique_ptr<InputHandler> InputManager(new InputHandler);
     //InputManager->BindButton(InputHandler::BUTTONS::A, std::make_unique<NextStateCommand>());
     //InputManager->BindButton(InputHandler::BUTTONS::B, std::make_unique<PreviousStateCommand>());
     //InputManager->BindButton(InputHandler::BUTTONS::UP, std::make_unique<MenuUpCommand>());
     //InputManager->BindButton(InputHandler::BUTTONS::DOWN, std::make_unique<MenuDownCommand>());
 
     std::unique_ptr<StateStack> StateManager(new StateStack);
-    StateManager->Push(MainMenuState());
 
 
     while (true)
@@ -246,7 +243,6 @@ int main()
         // update text
         // update animations
         StateManager->Update();
-        InputManager->HandleInput();
         bn::core::update();
     };
 
