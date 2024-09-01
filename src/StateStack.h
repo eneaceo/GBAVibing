@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "Actor.h"
-
 #include "State.h"
 #include "InputHandler.h"
 

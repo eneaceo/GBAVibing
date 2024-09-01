@@ -16,6 +16,7 @@
 
 namespace
 {
+    /*
     // Animate the current selected option in the menu
     void selected_option_menu(const uint8_t aSelectedOption)
     {
@@ -207,7 +208,7 @@ namespace
             bn::core::update();
         }
     }
-
+    */
 }
 
 #include "StateStack.h"
@@ -247,7 +248,7 @@ int main()
     };
 
     // END WIP
-
+    /*
     while (true)
     {
         switch (Data::CurrentState)
@@ -262,4 +263,5 @@ int main()
 
         bn::core::update();
     }
+    */
 }

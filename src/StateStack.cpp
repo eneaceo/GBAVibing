@@ -1,6 +1,4 @@
 #include "StateStack.h"
-#include "State.h"
-#include "InputHandler.h"
 #include "StateCommands.h"
 
 StateStack::StateStack()

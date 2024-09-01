@@ -1,6 +1,4 @@
 #include "InputHandler.h"
-#include "Command.h"
-#include "Actor.h"
 
 #include "bn_keypad.h"
 

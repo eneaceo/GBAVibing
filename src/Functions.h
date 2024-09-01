@@ -6,7 +6,7 @@
 
 namespace Functions
 {
-
+    /*
     static uint16_t GetSongFrames(const uint8_t aSongNumber)
     {
         uint16_t Ret = 0;
@@ -93,6 +93,7 @@ namespace Functions
         }
         Data::BackgroundAnimationFrames++;
     };
+    */
 }
 
 #endif

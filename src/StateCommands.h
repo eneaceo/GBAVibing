@@ -2,7 +2,6 @@
 #define STATECOMMANDS_H
 
 #include "Command.h"
-#include "StateStack.h"
 
 class Actor;
 
