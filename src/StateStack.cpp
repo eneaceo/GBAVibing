@@ -22,12 +22,12 @@ void StateStack::Update()
 
 void StateStack::AdvanceState()
 {
-    bn::bg_palettes::set_transparent_color(bn::color(31, 0, 0));
+    Push(std::make_unique<AlbumMenuState>());
 }
 
 void StateStack::PreviousState()
 {
-    bn::bg_palettes::set_transparent_color(bn::color(0, 31, 0));
+    Pop();
 }
 
 void StateStack::Push(std::unique_ptr<State> aState)

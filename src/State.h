@@ -19,8 +19,10 @@ public:
     virtual void Update() = 0;
     virtual void Enter() = 0;
     virtual void Exit() = 0;
+    virtual void ChangeSelectedOption(bool aChangeSelectedOption) = 0;
 
 protected:
+    uint8_t SelectedOption = 0;
     virtual void SelectedText(uint8_t aSelectedOption) = 0;
 };
 
@@ -32,6 +34,7 @@ public:
     void Update() override;
     void Enter() override {};
     void Exit() override {};
+    void ChangeSelectedOption(bool aChangeSelectedOption) override;
 
 private:
     // Texts
@@ -46,7 +49,6 @@ private:
     bn::vector<bn::sprite_ptr, 32> SelectedTextSprites;
     bn::optional<bn::regular_bg_ptr> ImageOptional;
     uint8_t TextSeparation = 15;
-    uint8_t SelectedOption = 0;
 
     void SelectedText(uint8_t aSelectedOption) override;
 };
@@ -59,7 +61,7 @@ public:
     void Update() override {};
     void Enter() override {};
     void Exit() override {};
-    void SelectedText(uint8_t aSelectedOption) override;
+    void ChangeSelectedOption(bool aChangeSelectedOption) override {};
 
 private:
     bn::sprite_text_generator TextGenerator;
@@ -67,7 +69,8 @@ private:
     bn::vector<bn::sprite_ptr, 32> SelectedTextSprites;
     bn::optional<bn::regular_bg_ptr> ImageOptional;
     uint8_t TextSeparation = 15;
-    uint8_t SelectedOption = 0;
+    
+    void SelectedText(uint8_t aSelectedOption) override {};
 };
 
 #endif

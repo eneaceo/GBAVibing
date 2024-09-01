@@ -16,6 +16,7 @@ public:
     void Update() override;
     void AdvanceState();
     void PreviousState();
+    State* GetCurrentState() { return CurrentState;};
 
 private:
     std::unique_ptr<InputHandler> InputManager;

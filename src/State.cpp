@@ -40,6 +40,11 @@ void MainMenuState::SelectedText(const uint8_t aSelectedOption)
     }
 }
 
+void MainMenuState::ChangeSelectedOption(bool aChangeSelectedOption)
+{
+    SelectedOption = 1 - SelectedOption;
+}
+
 AlbumMenuState::AlbumMenuState()
     : TextGenerator(common::variable_8x16_sprite_font)
 {
