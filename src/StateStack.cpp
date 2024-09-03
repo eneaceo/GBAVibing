@@ -17,17 +17,25 @@ void StateStack::Update()
     InputManager->HandleInput(*this);
 }
 
-#include "bn_bg_palettes.h"
-#include "bn_color.h"
-
 void StateStack::AdvanceState()
 {
-    Push(std::make_unique<AlbumMenuState>());
+    if (CurrentState)
+    {
+        switch (CurrentState->GetState())
+        {
+        case State::STATES::MAINMENU:
+            Push(std::make_unique<AlbumMenuState>());
+            break;
+        }
+    }
 }
 
 void StateStack::PreviousState()
 {
-    Pop();
+    if (CurrentState && CurrentState->GetState() != State::STATES::MAINMENU)
+    {
+        Pop();
+    }
 }
 
 void StateStack::Push(std::unique_ptr<State> aState)
