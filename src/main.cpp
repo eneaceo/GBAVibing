@@ -224,7 +224,7 @@ int main()
     // TODO -> Better scene/state handling, only one loop?
 
     bn::core::init();
-    bn::bg_palettes::set_transparent_color(bn::color(31, 0, 0));
+    bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
     // WIP
     // States - menu - credits - album menu - song playing

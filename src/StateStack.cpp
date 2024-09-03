@@ -24,7 +24,17 @@ void StateStack::AdvanceState()
         switch (CurrentState->GetState())
         {
         case State::STATES::MAINMENU:
-            Push(std::make_unique<AlbumMenuState>());
+            if (CurrentState->GetSelectedOption() == 0)
+            {
+                Push(std::make_unique<AlbumMenuState>());
+            }
+            else
+            {
+                Push(std::make_unique<CreditsState>());
+            }
+            break;
+        case State::STATES::ALBUMMENU:
+            Push(std::make_unique<PlayingSongState>());
             break;
         }
     }

@@ -2,8 +2,34 @@
 #include "bn_sprite_items_variable_8x16_font_red.h"
 #include "bn_regular_bg_items_background.h"
 
+#include "bn_math.h"
+
+void State::TextWiggle(const uint8_t aSelectedOption, const int8_t aPositionOffset)
+{
+    Angle -= AngleIncrement;
+
+    if (Angle == 0)
+    {
+        Angle += 360;
+    }
+
+    bn::fixed LocalAngle = Angle;
+
+    for (bn::sprite_ptr &SelectedTextSprite : SelectedTextSprites)
+    {
+        LocalAngle += AngleIncrement * 4;
+
+        if (LocalAngle >= 360)
+        {
+            LocalAngle -= 360;
+        }
+
+        SelectedTextSprite.set_y(aPositionOffset + aSelectedOption * TextSeparation + bn::degrees_lut_sin(LocalAngle) * 2);
+    }
+}
+
 MainMenuState::MainMenuState()
-    : TextGenerator(common::variable_8x16_sprite_font)
+    : State()
 {
     TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
     ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
@@ -19,6 +45,7 @@ void MainMenuState::Update()
     TextGenerator.generate(0, -30, TextAlbumName, TextSprites);
 
     SelectedText(SelectedOption);
+    TextWiggle(SelectedOption);
 }
 
 void MainMenuState::SelectedText(const uint8_t aSelectedOption)
@@ -52,7 +79,7 @@ void MainMenuState::Exit()
 }
 
 AlbumMenuState::AlbumMenuState()
-    : TextGenerator(common::variable_8x16_sprite_font)
+    : State()
 {
     TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::LEFT);
     ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
@@ -63,6 +90,7 @@ void AlbumMenuState::Update()
     TextSprites.clear();
     SelectedTextSprites.clear();
     SelectedText(SelectedOption);
+    TextWiggle(SelectedOption, -60);
 }
 
 void AlbumMenuState::SelectedText(const uint8_t aSelectedOption)
@@ -100,4 +128,20 @@ void AlbumMenuState::Exit()
 {
     TextSprites.clear();
     SelectedTextSprites.clear();
+}
+
+void PlayingSongState::Update()
+{
+    if (!SoundHandler.get()->active())
+    {
+        AudioCounter++;
+        if (AudioCounter <= 15)
+        {
+            SoundHandler = AudioItems[AudioCounter].play();
+        }
+        else
+        {
+            SoundHandler.get()->stop();
+        }
+    }
 }
