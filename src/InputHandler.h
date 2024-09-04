@@ -2,9 +2,9 @@
 #define INPUTHANDLER_H
 
 #include <memory>
-
 #include "Command.h"
-#include "Actor.h"
+
+class StateStack;
 
 class InputHandler
 {
@@ -21,7 +21,7 @@ public:
     ~InputHandler() = default;
 
     void BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand);
-    void HandleInput(Actor &aActor);
+    void HandleInput(StateStack &aStateStack);
 
 private:
     std::unique_ptr<Command> ButtonA;

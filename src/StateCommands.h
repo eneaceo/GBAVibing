@@ -3,30 +3,30 @@
 
 #include "Command.h"
 
-class Actor;
+class StateStack;
 
 class NextStateCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override;
+    void Execute(StateStack &aStateStack) override;
 };
 
 class PreviousStateCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override;
+    void Execute(StateStack &aStateStack) override;
 };
 
 class MenuUpCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override;
+    void Execute(StateStack &aStateStack) override;
 };
 
 class MenuDownCommand : public Command
 {
 public:
-    void Execute(Actor &aActor) override;
+    void Execute(StateStack &aStateStack) override;
 };
 
 #endif

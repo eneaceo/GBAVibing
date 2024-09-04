@@ -4,7 +4,7 @@
 
 #include "bn_math.h"
 
-void State::TextWiggle(const uint8_t aSelectedOption, const int8_t aPositionOffset)
+void MenuState::TextWiggle(const uint8_t aSelectedOption, const int8_t aPositionOffset)
 {
     Angle -= AngleIncrement;
 
@@ -29,7 +29,7 @@ void State::TextWiggle(const uint8_t aSelectedOption, const int8_t aPositionOffs
 }
 
 MainMenuState::MainMenuState()
-    : State()
+    : MenuState()
 {
     TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
     ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
@@ -79,7 +79,7 @@ void MainMenuState::Exit()
 }
 
 AlbumMenuState::AlbumMenuState()
-    : State()
+    : MenuState()
 {
     TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::LEFT);
     ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);

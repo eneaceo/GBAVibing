@@ -17,16 +17,6 @@
 class State
 {
 public:
-    State() : TextGenerator(common::variable_8x16_sprite_font) {};
-    virtual ~State() = default;
-    virtual void Update() = 0;
-    virtual void Enter() = 0;
-    virtual void Exit() = 0;
-    virtual uint8_t GetState() const = 0;
-    // TODO State Menu
-    virtual void ChangeSelectedOption(bool aChangeSelectedOption) = 0;
-    uint8_t GetSelectedOption() { return SelectedOption; };
-
     enum STATES
     {
         NONE,
@@ -35,6 +25,28 @@ public:
         ALBUMMENU,
         PLAYINGSONG
     };
+
+    virtual ~State() = default;
+    virtual void Update() = 0;
+    virtual void Enter() = 0;
+    virtual void Exit() = 0;
+    virtual uint8_t GetStateInfo() const = 0;
+    virtual State& GetState() = 0;
+};
+
+class MenuState : public State
+{
+public:
+    MenuState() : TextGenerator(common::variable_8x16_sprite_font) {};
+    virtual ~MenuState() = default;
+
+    virtual void Update() = 0;
+    virtual void Enter() = 0;
+    virtual void Exit() = 0;
+    virtual uint8_t GetStateInfo() const = 0;
+    virtual MenuState& GetState() = 0;
+    virtual void ChangeSelectedOption(bool aChangeSelectedOption) = 0;
+    uint8_t GetSelectedOption() { return SelectedOption; };
 
 protected:
     // TODO Text component
@@ -50,7 +62,7 @@ protected:
     const bn::fixed AngleIncrement = 4;
 };
 
-class MainMenuState : public State
+class MainMenuState : public MenuState
 {
 public:
     MainMenuState();
@@ -59,7 +71,8 @@ public:
     void Enter() override {};
     void Exit() override;
     void ChangeSelectedOption(bool aChangeSelectedOption) override;
-    uint8_t GetState() const override { return STATES::MAINMENU; };
+    uint8_t GetStateInfo() const override { return STATES::MAINMENU; };
+    virtual MainMenuState& GetState() override {return *this;};
 
 private:
     // Texts
@@ -71,7 +84,7 @@ private:
     void SelectedText(uint8_t aSelectedOption) override;
 };
 
-class AlbumMenuState : public State
+class AlbumMenuState : public MenuState
 {
 public:
     AlbumMenuState();
@@ -80,7 +93,8 @@ public:
     void Enter() override {};
     void Exit() override;
     void ChangeSelectedOption(bool aChangeSelectedOption) override;
-    uint8_t GetState() const override { return STATES::ALBUMMENU; };
+    uint8_t GetStateInfo() const override { return STATES::ALBUMMENU; };
+    virtual AlbumMenuState& GetState() override {return *this;};
 
 private:
     // Texts
@@ -105,9 +119,8 @@ public:
     void Update() override {};
     void Enter() override {};
     void Exit() override {};
-    void ChangeSelectedOption(bool aChangeSelectedOption) override {};
-    void SelectedText(uint8_t aSelectedOption) override {};
-    uint8_t GetState() const override { return STATES::CREDITS; };
+    uint8_t GetStateInfo() const override { return STATES::CREDITS; };
+    virtual CreditsState& GetState() override {return *this;};
 };
 
 class PlayingSongState : public State
@@ -118,9 +131,8 @@ public:
     void Update() override;
     void Enter() override {};
     void Exit() override {};
-    void ChangeSelectedOption(bool aChangeSelectedOption) override {};
-    void SelectedText(uint8_t aSelectedOption) override {};
-    uint8_t GetState() const override { return STATES::PLAYINGSONG; };
+    uint8_t GetStateInfo() const override { return STATES::PLAYINGSONG; };
+    virtual PlayingSongState& GetState() override {return *this;};
 
 private:
     // TODO Music component
@@ -128,25 +140,24 @@ private:
     uint8_t AudioCounter = 0;
 
     const bn::array<bn::sound_item, 16> AudioItems =
-    {
-        // 0 - 15
-        bn::sound_items::vvv_01_zugzwang_000,
-        bn::sound_items::vvv_01_zugzwang_001,
-        bn::sound_items::vvv_01_zugzwang_002,
-        bn::sound_items::vvv_01_zugzwang_003,
-        bn::sound_items::vvv_01_zugzwang_004,
-        bn::sound_items::vvv_01_zugzwang_005,
-        bn::sound_items::vvv_01_zugzwang_006,
-        bn::sound_items::vvv_01_zugzwang_007,
-        bn::sound_items::vvv_01_zugzwang_008,
-        bn::sound_items::vvv_01_zugzwang_009,
-        bn::sound_items::vvv_01_zugzwang_010,
-        bn::sound_items::vvv_01_zugzwang_011,
-        bn::sound_items::vvv_01_zugzwang_012,
-        bn::sound_items::vvv_01_zugzwang_013,
-        bn::sound_items::vvv_01_zugzwang_014,
-        bn::sound_items::vvv_01_zugzwang_015
-    };
+        {
+            // 0 - 15
+            bn::sound_items::vvv_01_zugzwang_000,
+            bn::sound_items::vvv_01_zugzwang_001,
+            bn::sound_items::vvv_01_zugzwang_002,
+            bn::sound_items::vvv_01_zugzwang_003,
+            bn::sound_items::vvv_01_zugzwang_004,
+            bn::sound_items::vvv_01_zugzwang_005,
+            bn::sound_items::vvv_01_zugzwang_006,
+            bn::sound_items::vvv_01_zugzwang_007,
+            bn::sound_items::vvv_01_zugzwang_008,
+            bn::sound_items::vvv_01_zugzwang_009,
+            bn::sound_items::vvv_01_zugzwang_010,
+            bn::sound_items::vvv_01_zugzwang_011,
+            bn::sound_items::vvv_01_zugzwang_012,
+            bn::sound_items::vvv_01_zugzwang_013,
+            bn::sound_items::vvv_01_zugzwang_014,
+            bn::sound_items::vvv_01_zugzwang_015};
 };
 
 #endif

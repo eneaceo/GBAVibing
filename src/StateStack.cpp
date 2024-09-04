@@ -13,35 +13,54 @@ StateStack::StateStack()
 
 void StateStack::Update()
 {
-    CurrentState->Update();
+    // TODO Think about a reference to the current state just for this
+    StatesStack.back().get()->Update();
     InputManager->HandleInput(*this);
 }
 
 void StateStack::AdvanceState()
 {
-    if (CurrentState)
+    switch (StatesStack.back().get()->GetStateInfo())
     {
-        switch (CurrentState->GetState())
+    case State::STATES::MAINMENU:
+    {
+        if (StatesStack.back().get()->GetSelectedOption() == 0)
         {
-        case State::STATES::MAINMENU:
-            if (CurrentState->GetSelectedOption() == 0)
-            {
-                Push(std::make_unique<AlbumMenuState>());
-            }
-            else
-            {
-                Push(std::make_unique<CreditsState>());
-            }
-            break;
-        case State::STATES::ALBUMMENU:
-            Push(std::make_unique<PlayingSongState>());
-            break;
+            Push(std::make_unique<AlbumMenuState>());
         }
+        else
+        {
+            Push(std::make_unique<CreditsState>());
+        }
+        break;
+    }
+    case State::STATES::ALBUMMENU:
+        Push(std::make_unique<PlayingSongState>());
+        break;
+    }
+}
+
+void StateStack::MenuUp()
+{
+    uint8_t StateInfo = StatesStack.back().get()->GetStateInfo()
+    if (StateInfo == State::STATES::MAINMENU || StateInfo == State::STATES::ALBUMMENU)
+    {
+        StatesStack.back().get()->ChangeSelectedOption(true);
+    }
+}
+
+void StateStack::MenuDown()
+{
+    uint8_t StateInfo = StatesStack.back().get()->GetStateInfo()
+    if (StateInfo == State::STATES::MAINMENU || StateInfo == State::STATES::ALBUMMENU)
+    {
+        StatesStack.back().get()->ChangeSelectedOption(false);
     }
 }
 
 void StateStack::PreviousState()
 {
+    State* CurrentState = StatesStack.back().get();
     if (CurrentState && CurrentState->GetState() != State::STATES::MAINMENU)
     {
         Pop();
@@ -50,25 +69,25 @@ void StateStack::PreviousState()
 
 void StateStack::Push(std::unique_ptr<State> aState)
 {
+    State *CurrentState = StatesStack.back().get();
     if (CurrentState)
     {
         CurrentState->Exit();
     }
     StatesStack.push_back(std::move(aState));
-    CurrentState = StatesStack.back().get();
-    if (CurrentState)
-    {
-        CurrentState->Enter();
-    }
+    StatesStack.back().get()->Enter();
 }
 
 void StateStack::Pop()
 {
     if (StatesStack.size() > 1)
     {
-        CurrentState->Exit();
-        StatesStack.pop_back();
-        CurrentState = StatesStack.back().get();
-        CurrentState->Enter();
+        State *CurrentState = StatesStack.back().get();
+        if (CurrentState)
+        {
+            CurrentState->Exit();
+            StatesStack.pop_back();
+            StatesStack.back().get()->Enter();
+        }
     }
 }

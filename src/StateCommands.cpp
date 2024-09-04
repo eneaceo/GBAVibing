@@ -1,27 +1,22 @@
 #include "StateCommands.h"
 #include "StateStack.h"
-#include "Actor.h"
 
-void NextStateCommand::Execute(Actor &aActor)
+void NextStateCommand::Execute(StateStack &aStateStack)
 {
-    StateStack &aStateStack = static_cast<StateStack &>(aActor);
     aStateStack.AdvanceState();
 }
 
-void PreviousStateCommand::Execute(Actor &aActor)
+void PreviousStateCommand::Execute(StateStack &aStateStack)
 {
-    StateStack &aStateStack = static_cast<StateStack &>(aActor);
     aStateStack.PreviousState();
 }
 
-void MenuUpCommand::Execute(Actor &aActor)
+void MenuUpCommand::Execute(StateStack &aStateStack)
 {
-    StateStack &aStateStack = static_cast<StateStack &>(aActor);
-    aStateStack.GetCurrentState()->ChangeSelectedOption(true);
+    aStateStack.MenuUp();
 }
 
-void MenuDownCommand::Execute(Actor &aActor)
+void MenuDownCommand::Execute(StateStack &aStateStack)
 {
-    StateStack &aStateStack = static_cast<StateStack &>(aActor);
-    aStateStack.GetCurrentState()->ChangeSelectedOption(false);
+    aStateStack.MenuDown();
 }

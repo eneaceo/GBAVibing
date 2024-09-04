@@ -4,24 +4,23 @@
 #include "bn_vector.h"
 #include <memory>
 
-#include "Actor.h"
 #include "State.h"
 #include "InputHandler.h"
 
-class StateStack : public Actor
+class StateStack
 {
 public:
     StateStack();
 
-    void Update() override;
+    void Update();
     void AdvanceState();
     void PreviousState();
-    State* GetCurrentState() { return CurrentState;};
+    void MenuUp();
+    void MenuDown();
 
 private:
     std::unique_ptr<InputHandler> InputManager;
     bn::vector<std::unique_ptr<State>, 3> StatesStack;
-    State *CurrentState = nullptr;
 
     void Push(std::unique_ptr<State> aState);
     void Pop();
