@@ -1,22 +1,17 @@
 #include "StateCommands.h"
-#include "StateStack.h"
+#include "State.h"
 
-void NextStateCommand::Execute(StateStack &aStateStack)
+void SelectCommand::Execute(MenuState &aState)
 {
-    aStateStack.AdvanceState();
+    aState.Select();
 }
 
-void PreviousStateCommand::Execute(StateStack &aStateStack)
+void MenuUpCommand::Execute(MenuState &aState)
 {
-    aStateStack.PreviousState();
+    aState.MenuUp();
 }
 
-void MenuUpCommand::Execute(StateStack &aStateStack)
+void MenuDownCommand::Execute(MenuState &aState)
 {
-    aStateStack.MenuUp();
-}
-
-void MenuDownCommand::Execute(StateStack &aStateStack)
-{
-    aStateStack.MenuDown();
+    aState.MenuDown();
 }

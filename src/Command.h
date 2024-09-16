@@ -1,13 +1,15 @@
 #ifndef COMMAND_H
 #define COMMAND_H
 
-class StateStack;
+class State;
+class MenuState;
 
 class Command
 {
 public:
     virtual ~Command() = default;
-    virtual void Execute(StateStack &aStateStack) = 0;
+    virtual void Execute(State &aState) {};
+    virtual void Execute(MenuState &aState) {};
 };
 
 #endif

@@ -3,30 +3,24 @@
 
 #include "Command.h"
 
-class StateStack;
+class MenuState;
 
-class NextStateCommand : public Command
+class SelectCommand : public Command
 {
 public:
-    void Execute(StateStack &aStateStack) override;
-};
-
-class PreviousStateCommand : public Command
-{
-public:
-    void Execute(StateStack &aStateStack) override;
+    void Execute(MenuState &aState) override;
 };
 
 class MenuUpCommand : public Command
 {
 public:
-    void Execute(StateStack &aStateStack) override;
+    void Execute(MenuState &aState) override;
 };
 
 class MenuDownCommand : public Command
 {
 public:
-    void Execute(StateStack &aStateStack) override;
+    void Execute(MenuState &aState) override;
 };
 
 #endif

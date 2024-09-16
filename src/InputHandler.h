@@ -4,7 +4,7 @@
 #include <memory>
 #include "Command.h"
 
-class StateStack;
+class State;
 
 class InputHandler
 {
@@ -21,7 +21,7 @@ public:
     ~InputHandler() = default;
 
     void BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand);
-    void HandleInput(StateStack &aStateStack);
+    void HandleInput(State &aState);
 
 private:
     std::unique_ptr<Command> ButtonA;

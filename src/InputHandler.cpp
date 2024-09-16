@@ -20,25 +20,25 @@ void InputHandler::BindButton(uint8_t aButton, std::unique_ptr<Command> aNewComm
     }
 }
 
-void InputHandler::HandleInput(StateStack &aStateStack)
+void InputHandler::HandleInput(State &aState)
 {
     if (bn::keypad::any_pressed())
     {
         if (bn::keypad::a_pressed() && ButtonA)
         {
-            ButtonA->Execute(aStateStack);
+            ButtonA->Execute(aState);
         }
         else if (bn::keypad::b_pressed() && ButtonB)
         {
-            ButtonB->Execute(aStateStack);
+            ButtonB->Execute(aState);
         }
         else if (bn::keypad::up_pressed() && ButtonUp)
         {
-            ButtonUp->Execute(aStateStack);
+            ButtonUp->Execute(aState);
         }
         else if (bn::keypad::down_pressed() && ButtonDown)
         {
-            ButtonDown->Execute(aStateStack);
+            ButtonDown->Execute(aState);
         }
     }
 }

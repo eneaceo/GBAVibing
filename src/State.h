@@ -14,6 +14,9 @@
 #include "bn_regular_bg_item.h"
 #include "bn_sound_items.h"
 
+#include "InputHandler.h"
+#include "StateCommands.h"
+
 class State
 {
 public:
@@ -25,28 +28,39 @@ public:
         ALBUMMENU,
         PLAYINGSONG
     };
-
+    State()
+    {
+        InputManager = std::make_unique<InputHandler>();
+        InputManager->BindButton(InputHandler::BUTTONS::A, std::make_unique<SelectCommand>());
+        //InputManager->BindButton(InputHandler::BUTTONS::B, std::make_unique<PreviousStateCommand>());
+        InputManager->BindButton(InputHandler::BUTTONS::UP, std::make_unique<MenuUpCommand>());
+        InputManager->BindButton(InputHandler::BUTTONS::DOWN, std::make_unique<MenuDownCommand>());
+    };
     virtual ~State() = default;
     virtual void Update() = 0;
     virtual void Enter() = 0;
     virtual void Exit() = 0;
     virtual uint8_t GetStateInfo() const = 0;
-    virtual State& GetState() = 0;
+
+private:
+    std::unique_ptr<InputHandler> InputManager;
 };
 
 class MenuState : public State
 {
 public:
-    MenuState() : TextGenerator(common::variable_8x16_sprite_font) {};
+    MenuState() : State(), TextGenerator(common::variable_8x16_sprite_font) {};
     virtual ~MenuState() = default;
 
     virtual void Update() = 0;
     virtual void Enter() = 0;
     virtual void Exit() = 0;
     virtual uint8_t GetStateInfo() const = 0;
-    virtual MenuState& GetState() = 0;
     virtual void ChangeSelectedOption(bool aChangeSelectedOption) = 0;
     uint8_t GetSelectedOption() { return SelectedOption; };
+    void Select(){};
+    void MenuUp(){};
+    void MenuDown(){};
 
 protected:
     // TODO Text component
@@ -72,7 +86,6 @@ public:
     void Exit() override;
     void ChangeSelectedOption(bool aChangeSelectedOption) override;
     uint8_t GetStateInfo() const override { return STATES::MAINMENU; };
-    virtual MainMenuState& GetState() override {return *this;};
 
 private:
     // Texts
@@ -94,7 +107,6 @@ public:
     void Exit() override;
     void ChangeSelectedOption(bool aChangeSelectedOption) override;
     uint8_t GetStateInfo() const override { return STATES::ALBUMMENU; };
-    virtual AlbumMenuState& GetState() override {return *this;};
 
 private:
     // Texts
@@ -120,7 +132,6 @@ public:
     void Enter() override {};
     void Exit() override {};
     uint8_t GetStateInfo() const override { return STATES::CREDITS; };
-    virtual CreditsState& GetState() override {return *this;};
 };
 
 class PlayingSongState : public State
@@ -132,7 +143,6 @@ public:
     void Enter() override {};
     void Exit() override {};
     uint8_t GetStateInfo() const override { return STATES::PLAYINGSONG; };
-    virtual PlayingSongState& GetState() override {return *this;};
 
 private:
     // TODO Music component
