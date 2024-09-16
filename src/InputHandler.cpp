@@ -1,21 +1,23 @@
 #include "InputHandler.h"
+#include "core/Command.h"
+#include "core/State.h"
 #include "bn_keypad.h"
 
-void InputHandler::BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand)
+void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewCommand)
 {
     switch (aButton)
     {
     case BUTTONS::A:
-        ButtonA = std::move(aNewCommand);
+        ButtonA = bn::move(aNewCommand);
         break;
     case BUTTONS::B:
-        ButtonB = std::move(aNewCommand);
+        ButtonB = bn::move(aNewCommand);
         break;
     case BUTTONS::UP:
-        ButtonUp = std::move(aNewCommand);
+        ButtonUp = bn::move(aNewCommand);
         break;
     case BUTTONS::DOWN:
-        ButtonDown = std::move(aNewCommand);
+        ButtonDown = bn::move(aNewCommand);
         break;
     }
 }

@@ -1,8 +1,11 @@
 #include "StateManager.h"
+#include "core/State.h"
+#include "states/MainMenuState.h"
 
 StateManager::StateManager()
 {
-    CurrentState = std::make_unique<MainMenuState>();
+    CurrentState = bn::make_unique<MainMenuState>();
+    CurrentState->Enter();
 }
 
 void StateManager::Update()
@@ -10,12 +13,12 @@ void StateManager::Update()
     CurrentState->Update();
 }
 
-void StateManager::ChangeState(std::unique_ptr<State> aState)
+void StateManager::ChangeState(bn::unique_ptr<State> aState)
 {
     if (CurrentState)
     {
         CurrentState->Exit();
     }
-    aState->Enter();
-    CurrentState = std::move(aState);
+    CurrentState = bn::move(aState);
+    CurrentState->Enter();
 }

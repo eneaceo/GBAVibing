@@ -1,7 +1,7 @@
 #ifndef STATECOMMANDS_H
 #define STATECOMMANDS_H
 
-#include "Command.h"
+#include "core/Command.h"
 
 class MenuState;
 

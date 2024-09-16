@@ -1,9 +1,9 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
-#include <memory>
-#include "Command.h"
+#include "bn_unique_ptr.h"
 
+class Command;
 class State;
 
 class InputHandler
@@ -20,14 +20,14 @@ public:
     InputHandler() {};
     ~InputHandler() = default;
 
-    void BindButton(uint8_t aButton, std::unique_ptr<Command> aNewCommand);
+    void BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewCommand);
     void HandleInput(State &aState);
 
 private:
-    std::unique_ptr<Command> ButtonA;
-    std::unique_ptr<Command> ButtonB;
-    std::unique_ptr<Command> ButtonUp;
-    std::unique_ptr<Command> ButtonDown;
+    bn::unique_ptr<Command> ButtonA;
+    bn::unique_ptr<Command> ButtonB;
+    bn::unique_ptr<Command> ButtonUp;
+    bn::unique_ptr<Command> ButtonDown;
 };
 
 #endif
