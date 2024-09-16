@@ -1,5 +1,5 @@
 #include "AlbumMenuState.h"
-
+/*
 AlbumMenuState::AlbumMenuState()
     : MenuState()
 {
@@ -51,3 +51,4 @@ void AlbumMenuState::Exit()
     TextSprites.clear();
     SelectedTextSprites.clear();
 }
+*/

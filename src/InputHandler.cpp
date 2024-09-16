@@ -1,6 +1,6 @@
 #include "InputHandler.h"
-#include "core/Command.h"
-#include "core/State.h"
+#include "Command.h"
+#include "State.h"
 #include "bn_keypad.h"
 
 void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewCommand)
@@ -18,6 +18,8 @@ void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewComma
         break;
     case BUTTONS::DOWN:
         ButtonDown = bn::move(aNewCommand);
+        break;
+    default:
         break;
     }
 }

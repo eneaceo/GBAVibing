@@ -2,7 +2,8 @@
 #define STATE_H
 
 #include "bn_unique_ptr.h"
-#include "../InputHandler.h"
+#include "InputHandler.h"
+#include "TextHandler.h"
 
 class State
 {
@@ -19,6 +20,7 @@ public:
     State()
     {
         InputManager = bn::make_unique<InputHandler>();
+        TextManager = bn::make_unique<TextHandler>();
     };
 
     virtual ~State() = default;
@@ -27,8 +29,9 @@ public:
     virtual void Exit() = 0;
     virtual uint8_t GetStateInfo() const = 0;
 
-private:
+protected:
     bn::unique_ptr<InputHandler> InputManager;
+    bn::unique_ptr<TextHandler> TextManager;
 };
 
 #endif

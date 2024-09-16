@@ -1,15 +1,26 @@
+#ifndef MAINMENUSTATE_H
+#define MAINMENUSTATE_H
+
 #include "MenuState.h"
+#include "bn_string.h"
+#include "bn_array.h"
 
 class MainMenuState : public MenuState
 {
 public:
     MainMenuState();
+    virtual ~MainMenuState() = default;
 
     void Update() override;
-    void Enter() override {};
+    void Enter() override;
     void Exit() override;
-    void ChangeSelectedOption(bool aChangeSelectedOption) override;
     uint8_t GetStateInfo() const override { return STATES::MAINMENU; };
+    void ChangeSelectedOption(bool aChangeDirection) override;
+
+    virtual void Select() override;
+    virtual void Back() override;
+    virtual void MenuUp() override;
+    virtual void MenuDown() override;
 
 private:
     // Texts
@@ -18,5 +29,7 @@ private:
     const bn::string<32> TextAlbum = "Escuchar Album";
     const bn::string<32> TextCreditos = "Créditos";
     const bn::array<bn::string<32>, 2> MenuTexts = {TextAlbum, TextCreditos};
-    void SelectedText(uint8_t aSelectedOption) override;
+    const uint8_t TextSeparation = 15;
 };
+
+#endif

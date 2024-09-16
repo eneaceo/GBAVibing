@@ -1,5 +1,8 @@
-#include "../core/State.h"
+#ifndef PLAYINGSONGSTATE_H
+#define PLAYINGSONGSTATE_H
 
+#include "State.h"
+/*
 class PlayingSongState : public State
 {
 public:
@@ -35,3 +38,5 @@ private:
             bn::sound_items::vvv_01_zugzwang_014,
             bn::sound_items::vvv_01_zugzwang_015};
 };
+*/
+#endif

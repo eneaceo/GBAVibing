@@ -1,5 +1,8 @@
-#include "MenuState.h"
+#ifndef ALBUMSTATE_H
+#define ALBUMSTATE_H
 
+#include "MenuState.h"
+/*
 class AlbumMenuState : public MenuState
 {
 public:
@@ -23,5 +26,7 @@ private:
     const bn::string<32> VVV08 = "La Grieta";
     const bn::string<32> VVV09 = "Ctrl + Alt + Supr";
     const bn::array<bn::string<32>, 9> AlbumTexts = {VVV01, VVV02, VVV03, VVV04, VVV05, VVV06, VVV07, VVV08, VVV09};
-    void SelectedText(uint8_t aSelectedOption) override;
 };
+*/
+
+#endif

@@ -8,8 +8,8 @@ class Command
 {
 public:
     virtual ~Command() = default;
-    virtual void Execute(State &aState) {};
-    virtual void Execute(MenuState &aState) {};
+    virtual void Execute(State &aState) { (void)aState; };
+    virtual void Execute(MenuState &aState) { (void)aState; };
 };
 
 #endif

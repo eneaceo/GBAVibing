@@ -1,5 +1,5 @@
 #include "StateCommands.h"
-#include "states/MenuState.h"
+#include "MenuState.h"
 
 void SelectCommand::Execute(MenuState &aState)
 {

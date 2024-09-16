@@ -1,5 +1,8 @@
-#include "../core/State.h"
+#ifndef CREDITSTATE_H
+#define CREDITSTATE_H
 
+#include "State.h"
+/*
 class CreditsState : public State
 {
 public:
@@ -10,3 +13,5 @@ public:
     void Exit() override {};
     uint8_t GetStateInfo() const override { return STATES::CREDITS; };
 };
+*/
+#endif

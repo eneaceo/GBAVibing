@@ -2,8 +2,8 @@
 #define INPUTHANDLER_H
 
 #include "bn_unique_ptr.h"
+#include "Command.h"
 
-class Command;
 class State;
 
 class InputHandler

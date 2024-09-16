@@ -1,6 +1,5 @@
 #include "StateManager.h"
-#include "core/State.h"
-#include "states/MainMenuState.h"
+#include "MainMenuState.h"
 
 StateManager::StateManager()
 {
