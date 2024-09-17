@@ -40,6 +40,7 @@ void AlbumMenuState::Exit()
 
 void AlbumMenuState::Select()
 {
+    
 }
 
 void AlbumMenuState::Back()

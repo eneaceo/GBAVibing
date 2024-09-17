@@ -30,6 +30,7 @@ public:
     virtual void MenuDown() {};
 
 protected:
+    // TODO Change this to object, no need for pointers
     bn::unique_ptr<InputHandler> InputManager;
     bn::unique_ptr<TextHandler> TextManager;
 

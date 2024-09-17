@@ -22,7 +22,7 @@ public:
 
 private:
     StateManager() = default;
-
+    // TODO Change this to object, no need for pointers
     bn::unique_ptr<State> CurrentState;
 };
 
