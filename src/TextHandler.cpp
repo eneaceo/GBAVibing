@@ -8,6 +8,13 @@ TextHandler::TextHandler()
 {
 }
 
+TextHandler::~TextHandler()
+{
+    StaticTextSprites.clear();
+    TextSprites.clear();
+    SelectedTextSprites.clear();
+}
+
 void TextHandler::Update()
 {
     TextSprites.clear();
@@ -17,6 +24,13 @@ void TextHandler::Update()
 void TextHandler::GenerateStaticText(const int16_t aXPos, const int16_t aYPos, const bn::string<32> aText)
 {
     TextGenerator.generate(aXPos, aYPos, aText, StaticTextSprites);
+}
+
+void TextHandler::ClearText()
+{
+    TextSprites.clear();
+    SelectedTextSprites.clear();
+    StaticTextSprites.clear();
 }
 
 void TextHandler::GenerateText(const int16_t aXPos, const int16_t aYPos, const bn::string<32> aText)
@@ -56,4 +70,9 @@ void TextHandler::TextWiggle(const int16_t aXPos, const int16_t aYPos)
 
         SelectedTextSprite.set_y(aYPos + bn::degrees_lut_sin(LocalAngle) * 2);
     }
+}
+
+void TextHandler::SetTextAlignement(bn::sprite_text_generator::alignment_type aTextAlignement)
+{
+    TextGenerator.set_alignment(aTextAlignement);
 }

@@ -2,16 +2,17 @@
 #define CREDITSTATE_H
 
 #include "State.h"
-/*
+
 class CreditsState : public State
 {
 public:
-    CreditsState() : State() {};
+    CreditsState();
+    ~CreditsState() = default;
 
-    void Update() override {};
-    void Enter() override {};
-    void Exit() override {};
-    uint8_t GetStateInfo() const override { return STATES::CREDITS; };
+    void Update() override;
+    void Enter() override;
+    void Exit() override;
+    void Back() override;
 };
-*/
+
 #endif

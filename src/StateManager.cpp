@@ -1,12 +1,6 @@
 #include "StateManager.h"
 #include "MainMenuState.h"
 
-StateManager::StateManager()
-{
-    CurrentState = bn::make_unique<MainMenuState>();
-    CurrentState->Enter();
-}
-
 void StateManager::Update()
 {
     CurrentState->Update();

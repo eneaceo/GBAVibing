@@ -3,6 +3,9 @@
 #include "State.h"
 #include "bn_keypad.h"
 
+#include "bn_color.h"
+#include "bn_bg_palettes.h"
+
 void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewCommand)
 {
     switch (aButton)

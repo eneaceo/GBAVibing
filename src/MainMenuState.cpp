@@ -1,8 +1,15 @@
 #include "MainMenuState.h"
+#include "StateManager.h"
+#include "StateCommands.h"
+#include "CreditsState.h"
+#include "AlbumMenuState.h"
 
 MainMenuState::MainMenuState()
 {
-    
+    TextManager->SetTextAlignement(bn::sprite_text_generator::alignment_type::CENTER);
+    InputManager->BindButton(InputHandler::BUTTONS::A, bn::make_unique<SelectCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::UP, bn::make_unique<MenuUpCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::DOWN, bn::make_unique<MenuDownCommand>());
 }
 
 void MainMenuState::Update()
@@ -19,6 +26,7 @@ void MainMenuState::Update()
             TextManager->GenerateSelectedText(0, TextSeparation * Option, MenuTexts[Option]);
         }
     }
+    InputManager->HandleInput(*this);
 }
 
 void MainMenuState::Enter()
@@ -29,26 +37,30 @@ void MainMenuState::Enter()
 
 void MainMenuState::Exit()
 {
-}
-
-void MainMenuState::ChangeSelectedOption(bool aChangeSelectedOption)
-{
-    (void)aChangeSelectedOption;
-    SelectedOption = 1 - SelectedOption;
+    TextManager->ClearText();
 }
 
 void MainMenuState::Select()
 {
-}
-
-void MainMenuState::Back()
-{
+    switch (SelectedOption)
+    {
+    case 0:
+        StateManager::GetInstance().ChangeState(bn::make_unique<AlbumMenuState>());
+        break;
+    case 1:
+        StateManager::GetInstance().ChangeState(bn::make_unique<CreditsState>());
+        break;
+    default:
+        break;
+    }
 }
 
 void MainMenuState::MenuUp()
 {
+    SelectedOption = 1 - SelectedOption;
 }
 
 void MainMenuState::MenuDown()
 {
+    SelectedOption = 1 - SelectedOption;
 }

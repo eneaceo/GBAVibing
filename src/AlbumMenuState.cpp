@@ -1,54 +1,58 @@
 #include "AlbumMenuState.h"
-/*
+#include "StateManager.h"
+#include "StateCommands.h"
+#include "MainMenuState.h"
+
 AlbumMenuState::AlbumMenuState()
-    : MenuState()
 {
-    TextGenerator.set_alignment(bn::sprite_text_generator::alignment_type::LEFT);
-    ImageOptional = bn::regular_bg_items::background.create_bg(0, 0);
+    TextManager->SetTextAlignement(bn::sprite_text_generator::alignment_type::LEFT);
+    InputManager->BindButton(InputHandler::BUTTONS::A, bn::make_unique<SelectCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::B, bn::make_unique<BackCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::UP, bn::make_unique<MenuUpCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::DOWN, bn::make_unique<MenuDownCommand>());
 }
 
 void AlbumMenuState::Update()
 {
-    TextSprites.clear();
-    SelectedTextSprites.clear();
-    SelectedText(SelectedOption);
-    TextWiggle(SelectedOption, -60);
-}
-
-void AlbumMenuState::SelectedText(const uint8_t aSelectedOption)
-{
+    TextManager->Update();
     for (uint8_t Option = 0; Option < AlbumTexts.size(); ++Option)
     {
-        if (Option != aSelectedOption)
+        if (Option != SelectedOption)
         {
-            TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
-            TextGenerator.generate(-100, -60 + TextSeparation * Option, AlbumTexts[Option], TextSprites);
+            TextManager->GenerateText(-100, -60 + TextSeparation * Option, AlbumTexts[Option]);
         }
         else
         {
-            TextGenerator.set_palette_item(bn::sprite_items::variable_8x16_font_red.palette_item());
-            TextGenerator.set_one_sprite_per_character(true);
-            TextGenerator.generate(-80, -60 + TextSeparation * Option, AlbumTexts[Option], SelectedTextSprites);
-            TextGenerator.set_one_sprite_per_character(false);
+            TextManager->GenerateSelectedText(-80, -60 + TextSeparation * Option, AlbumTexts[Option]);
         }
     }
+    InputManager->HandleInput(*this);
 }
 
-void AlbumMenuState::ChangeSelectedOption(bool aChangeSelectedOption)
+void AlbumMenuState::Enter()
 {
-    if (aChangeSelectedOption)
-    {
-        SelectedOption = (SelectedOption + AlbumTexts.size() - 1) % AlbumTexts.size();
-    }
-    else
-    {
-        SelectedOption = (SelectedOption + 1) % AlbumTexts.size();
-    }
 }
 
 void AlbumMenuState::Exit()
 {
-    TextSprites.clear();
-    SelectedTextSprites.clear();
+    TextManager->ClearText();
 }
-*/
+
+void AlbumMenuState::Select()
+{
+}
+
+void AlbumMenuState::Back()
+{
+    StateManager::GetInstance().ChangeState(bn::make_unique<MainMenuState>());
+}
+
+void AlbumMenuState::MenuUp()
+{
+    SelectedOption = (SelectedOption + AlbumTexts.size() - 1) % AlbumTexts.size();
+}
+
+void AlbumMenuState::MenuDown()
+{
+    SelectedOption = (SelectedOption + 1) % AlbumTexts.size();
+}

@@ -3,27 +3,30 @@
 
 #include "Command.h"
 
-class MenuState;
+class State;
 
 class SelectCommand : public Command
 {
 public:
-    using Command::Execute;
-    void Execute(MenuState &aState) override;
+    void Execute(State &aState) override;
+};
+
+class BackCommand : public Command
+{
+public:
+    void Execute(State &aState) override;
 };
 
 class MenuUpCommand : public Command
 {
 public:
-    using Command::Execute;
-    void Execute(MenuState &aState) override;
+    void Execute(State &aState) override;
 };
 
 class MenuDownCommand : public Command
 {
 public:
-    using Command::Execute;
-    void Execute(MenuState &aState) override;
+    void Execute(State &aState) override;
 };
 
 #endif

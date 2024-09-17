@@ -1,17 +1,22 @@
 #include "StateCommands.h"
-#include "MenuState.h"
+#include "State.h"
 
-void SelectCommand::Execute(MenuState &aState)
+void SelectCommand::Execute(State &aState)
 {
     aState.Select();
 }
 
-void MenuUpCommand::Execute(MenuState &aState)
+void BackCommand::Execute(State &aState)
+{
+    aState.Back();
+}
+
+void MenuUpCommand::Execute(State &aState)
 {
     aState.MenuUp();
 }
 
-void MenuDownCommand::Execute(MenuState &aState)
+void MenuDownCommand::Execute(State &aState)
 {
     aState.MenuDown();
 }

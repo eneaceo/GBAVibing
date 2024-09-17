@@ -1,18 +1,23 @@
 #ifndef ALBUMSTATE_H
 #define ALBUMSTATE_H
 
-#include "MenuState.h"
-/*
-class AlbumMenuState : public MenuState
+#include "State.h"
+#include "bn_string.h"
+#include "bn_array.h"
+
+class AlbumMenuState : public State
 {
 public:
     AlbumMenuState();
+    ~AlbumMenuState() = default;
 
     void Update() override;
-    void Enter() override {};
+    void Enter() override;
     void Exit() override;
-    void ChangeSelectedOption(bool aChangeSelectedOption) override;
-    uint8_t GetStateInfo() const override { return STATES::ALBUMMENU; };
+    void Select() override;
+    void Back() override;
+    void MenuUp() override;
+    void MenuDown() override;
 
 private:
     // Texts
@@ -26,7 +31,7 @@ private:
     const bn::string<32> VVV08 = "La Grieta";
     const bn::string<32> VVV09 = "Ctrl + Alt + Supr";
     const bn::array<bn::string<32>, 9> AlbumTexts = {VVV01, VVV02, VVV03, VVV04, VVV05, VVV06, VVV07, VVV08, VVV09};
+    const uint8_t TextSeparation = 15;
 };
-*/
 
 #endif

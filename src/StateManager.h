@@ -8,12 +8,21 @@ class State;
 class StateManager
 {
 public:
-    StateManager();
+    static StateManager &GetInstance()
+    {
+        static StateManager Instance;
+        return Instance;
+    }
+
+    StateManager(const StateManager &) = delete;
+    StateManager &operator=(const StateManager &) = delete;
 
     void Update();
     void ChangeState(bn::unique_ptr<State> aState);
 
 private:
+    StateManager() = default;
+
     bn::unique_ptr<State> CurrentState;
 };
 
