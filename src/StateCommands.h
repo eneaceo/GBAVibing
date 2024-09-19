@@ -29,4 +29,10 @@ public:
     void Execute(State &aState) override;
 };
 
+class AutoCommand : public Command
+{
+public:
+    void Execute(State &aState) override;
+};
+
 #endif

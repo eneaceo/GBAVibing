@@ -20,3 +20,8 @@ void MenuDownCommand::Execute(State &aState)
 {
     aState.MenuDown();
 }
+
+void AutoCommand::Execute(State &aState)
+{
+    aState.Auto();
+}

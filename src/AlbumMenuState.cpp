@@ -10,10 +10,12 @@ AlbumMenuState::AlbumMenuState()
     InputManager->BindButton(InputHandler::BUTTONS::B, bn::make_unique<BackCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::UP, bn::make_unique<MenuUpCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::DOWN, bn::make_unique<MenuDownCommand>());
+    InputManager->BindButton(InputHandler::BUTTONS::START, bn::make_unique<AutoCommand>());
 }
 
 void AlbumMenuState::Update()
 {
+    MusicManager.Update();
     TextManager->Update();
     for (uint8_t Option = 0; Option < AlbumTexts.size(); ++Option)
     {
@@ -40,12 +42,19 @@ void AlbumMenuState::Exit()
 
 void AlbumMenuState::Select()
 {
-    
+    MusicManager.PlayMusic(SelectedOption);
 }
 
 void AlbumMenuState::Back()
 {
-    StateManager::GetInstance().ChangeState(bn::make_unique<MainMenuState>());
+    if (MusicManager.GetIsPlaying())
+    {
+        MusicManager.StopMusic();
+    }
+    else
+    {
+        StateManager::GetInstance().ChangeState(bn::make_unique<MainMenuState>());
+    }
 }
 
 void AlbumMenuState::MenuUp()
@@ -56,4 +65,9 @@ void AlbumMenuState::MenuUp()
 void AlbumMenuState::MenuDown()
 {
     SelectedOption = (SelectedOption + 1) % AlbumTexts.size();
+}
+
+void AlbumMenuState::Auto()
+{
+    MusicManager.AutoPlay();
 }

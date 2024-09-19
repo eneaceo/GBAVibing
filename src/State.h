@@ -28,6 +28,7 @@ public:
     virtual void Back() {};
     virtual void MenuUp() {};
     virtual void MenuDown() {};
+    virtual void Auto() {};
 
 protected:
     // TODO Change this to object, no need for pointers

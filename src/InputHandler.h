@@ -14,7 +14,8 @@ public:
         A,
         B,
         UP,
-        DOWN
+        DOWN,
+        START
     };
 
     InputHandler() {};
@@ -28,6 +29,7 @@ private:
     bn::unique_ptr<Command> ButtonB;
     bn::unique_ptr<Command> ButtonUp;
     bn::unique_ptr<Command> ButtonDown;
+    bn::unique_ptr<Command> ButtonStart;
 };
 
 #endif

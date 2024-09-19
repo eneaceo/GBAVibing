@@ -22,6 +22,9 @@ void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewComma
     case BUTTONS::DOWN:
         ButtonDown = bn::move(aNewCommand);
         break;
+    case BUTTONS::START:
+        ButtonStart = bn::move(aNewCommand);
+        break;
     default:
         break;
     }
@@ -46,6 +49,10 @@ void InputHandler::HandleInput(State &aState)
         else if (bn::keypad::down_pressed() && ButtonDown)
         {
             ButtonDown->Execute(aState);
+        }
+        else if (bn::keypad::start_pressed() && ButtonStart)
+        {
+            ButtonStart->Execute(aState);
         }
     }
 }
