@@ -11,12 +11,15 @@ AlbumMenuState::AlbumMenuState()
     InputManager->BindButton(InputHandler::BUTTONS::UP, bn::make_unique<MenuUpCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::DOWN, bn::make_unique<MenuDownCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::START, bn::make_unique<AutoCommand>());
+    MusicManager = bn::make_unique<MusicHandler>();
+    MusicManager->Attach(this);
 }
 
 void AlbumMenuState::Update()
 {
-    MusicManager.Update();
+    MusicManager->Update();
     TextManager->Update();
+    TextManager->GenerateText(0, 0,bn::to_string<64>(MusicManager->GetCurrentFrame()));
     for (uint8_t Option = 0; Option < AlbumTexts.size(); ++Option)
     {
         if (Option != SelectedOption)
@@ -42,14 +45,14 @@ void AlbumMenuState::Exit()
 
 void AlbumMenuState::Select()
 {
-    MusicManager.PlayMusic(SelectedOption);
+    MusicManager->PlayMusic(SelectedOption);
 }
 
 void AlbumMenuState::Back()
 {
-    if (MusicManager.GetIsPlaying())
+    if (MusicManager->GetIsPlaying())
     {
-        MusicManager.StopMusic();
+        MusicManager->StopMusic();
     }
     else
     {
@@ -69,5 +72,28 @@ void AlbumMenuState::MenuDown()
 
 void AlbumMenuState::Auto()
 {
-    MusicManager.AutoPlay();
+    MusicManager->AutoPlay();
+}
+
+void AlbumMenuState::UpdateSelectedOption()
+{
+    SelectedOption = MusicManager->GetCurrentSong();
+}
+
+void AlbumMenuState::UpdateAutoPlay()
+{
+    TextManager->ClearStaticText();
+    if (MusicManager->GetAutoPlayEnabled())
+    {
+        TextManager->GenerateStaticText(10, 0, "Auto Play: ON");
+    }
+}
+
+void AlbumMenuState::UpdatePlaying()
+{
+    TextManager->ClearStaticText();
+    if (MusicManager->GetIsPlaying())
+    {
+        TextManager->GenerateStaticText(10, 15, "Playing");
+    }
 }

@@ -2,11 +2,13 @@
 #define ALBUMSTATE_H
 
 #include "MusicHandler.h"
+#include "Observer.h"
+#include "bn_unique_ptr.h"
 #include "State.h"
 #include "bn_string.h"
 #include "bn_array.h"
 
-class AlbumMenuState : public State
+class AlbumMenuState : public State, public Observer
 {
 public:
     AlbumMenuState();
@@ -21,8 +23,12 @@ public:
     void MenuDown() override;
     void Auto() override;
 
+    void UpdateSelectedOption() override;
+    void UpdatePlaying() override;
+    void UpdateAutoPlay() override;
+
 private:
-    MusicHandler MusicManager;
+    bn::unique_ptr<MusicHandler> MusicManager;
 
     // Texts
     const bn::string<32> VVV01 = "Zugzwang";

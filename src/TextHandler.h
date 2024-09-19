@@ -18,6 +18,7 @@ public:
     void GenerateText(const int16_t aXPos, const int16_t aYPos, const bn::string<32> aText);
     void GenerateSelectedText(const int16_t aXPos, const int16_t aYPos, const bn::string<32> aText);
     void ClearText();
+    void ClearStaticText();
     void TextWiggle(const int16_t aXPos, const int16_t aYPos);
     void SetTextAlignement(bn::sprite_text_generator::alignment_type aTextAlignement);
 

@@ -33,6 +33,11 @@ void TextHandler::ClearText()
     StaticTextSprites.clear();
 }
 
+void TextHandler::ClearStaticText()
+{
+    StaticTextSprites.clear();
+}
+
 void TextHandler::GenerateText(const int16_t aXPos, const int16_t aYPos, const bn::string<32> aText)
 {
     TextGenerator.set_palette_item(bn::sprite_items::common_variable_8x16_font.palette_item());
