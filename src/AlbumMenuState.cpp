@@ -36,7 +36,7 @@ void AlbumMenuState::Update()
     InputManager->HandleInput(*this);
 }
 
-void AlbumMenuState::Enter()
+void AlbumMenuState::Enter(const bool aReset)
 {
 }
 

@@ -15,7 +15,7 @@ public:
     ~AlbumMenuState() = default;
 
     void Update() override;
-    void Enter() override;
+    void Enter(const bool aReset) override;
     void Exit() override;
     void Select() override;
     void Back() override;

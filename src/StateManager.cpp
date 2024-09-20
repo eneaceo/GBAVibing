@@ -6,12 +6,12 @@ void StateManager::Update()
     CurrentState->Update();
 }
 
-void StateManager::ChangeState(bn::unique_ptr<State> aState)
+void StateManager::ChangeState(bn::unique_ptr<State> aState, bool aReset)
 {
     if (CurrentState)
     {
         CurrentState->Exit();
     }
     CurrentState = bn::move(aState);
-    CurrentState->Enter();
+    CurrentState->Enter(aReset);
 }

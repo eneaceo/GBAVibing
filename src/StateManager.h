@@ -18,11 +18,10 @@ public:
     StateManager &operator=(const StateManager &) = delete;
 
     void Update();
-    void ChangeState(bn::unique_ptr<State> aState);
+    void ChangeState(bn::unique_ptr<State> aState, bool aReset = false);
 
 private:
     StateManager() = default;
-    // TODO Change this to object, no need for pointers
     bn::unique_ptr<State> CurrentState;
 };
 

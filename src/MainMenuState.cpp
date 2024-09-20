@@ -32,8 +32,12 @@ void MainMenuState::Update()
     InputManager->HandleInput(*this);
 }
 
-void MainMenuState::Enter()
+void MainMenuState::Enter(const bool aReset)
 {
+    if (aReset)
+    {
+        BackgroundManager->PlayIntro();
+    }
     TextManager->GenerateStaticText(0, -40, TextBandName);
     TextManager->GenerateStaticText(0, -30, TextAlbumName);
 }

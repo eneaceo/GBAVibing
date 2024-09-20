@@ -10,7 +10,7 @@ public:
     ~CreditsState() = default;
 
     void Update() override;
-    void Enter() override;
+    void Enter(const bool aReset) override;
     void Exit() override;
     void Back() override;
 };

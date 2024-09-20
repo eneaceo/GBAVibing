@@ -14,7 +14,7 @@ void CreditsState::Update()
     InputManager->HandleInput(*this);
 }
 
-void CreditsState::Enter()
+void CreditsState::Enter(const bool aReset)
 {
 }
 
