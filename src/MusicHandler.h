@@ -25,6 +25,7 @@ public:
     uint8_t GetCurrentSong() const { return CurrentSong; };
 
     void Attach(Observer *aObserver);
+    void Detach() { MusicObserver = nullptr; };
 
 private:
     bool IsPlaying = false;
@@ -34,7 +35,7 @@ private:
     uint16_t CurrentIndex = 0;
     uint16_t CurrentSongMaxIndex = 0;
     bn::optional<bn::sound_handle> SoundHandler;
-    bn::unique_ptr<Observer> MusicObserver;
+    Observer *MusicObserver;
 
     uint8_t GetSongStart(const uint8_t aSongNumber) const;
     uint8_t GetSongEnd(const uint8_t aSongNumber) const;

@@ -58,7 +58,7 @@ uint8_t MusicHandler::GetSongEnd(const uint8_t aSongNumber) const
 
 void MusicHandler::Attach(Observer *aObserver)
 {
-    MusicObserver = bn::unique_ptr<Observer>(aObserver);
+    MusicObserver = aObserver;
 }
 
 void MusicHandler::NotifySelectedOption()
