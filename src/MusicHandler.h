@@ -18,52 +18,32 @@ public:
     void Update();
     void PlayMusic(uint8_t aSongNumber);
     void StopMusic();
-    bool GetIsPlaying() const { return IsPlaying; };
     void AutoPlay();
+
+    bool GetIsPlaying() const { return IsPlaying; };
     bool GetAutoPlayEnabled() const { return AutoPlayEnabled; };
     uint8_t GetCurrentSong() const { return CurrentSong; };
 
-    uint16_t GetCurrentFrame() const { return CurrentFrame; };
-
-    void Attach(Observer *aObserver)
-    {
-        MusicObserver = bn::unique_ptr<Observer>(aObserver);
-    }
+    void Attach(Observer *aObserver);
 
 private:
     bool IsPlaying = false;
     bool AutoPlayEnabled = false;
     uint16_t CurrentSong = 0;
-    uint16_t CurrentFrame = 0;
+
     uint16_t CurrentIndex = 0;
     uint16_t CurrentSongMaxIndex = 0;
     bn::optional<bn::sound_handle> SoundHandler;
-
     bn::unique_ptr<Observer> MusicObserver;
 
-    void NotifySelectedOption()
-    {
-        MusicObserver->UpdateSelectedOption();
-    };
-
-    void NotifyPlaying()
-    {
-        MusicObserver->UpdatePlaying();
-    };
-
-    void NotifyAutoPlay()
-    {
-        MusicObserver->UpdateAutoPlay();
-    };
-
-    void SetIsPlaying(bool aIsPlaying);
     uint8_t GetSongStart(const uint8_t aSongNumber) const;
     uint8_t GetSongEnd(const uint8_t aSongNumber) const;
 
-    const uint8_t MaxSongs = 9;
-    const uint16_t MaxIndexFrames = 500;
+    void NotifySelectedOption();
+    void NotifyAutoPlay();
 
-    bn::array<uint8_t, 18> SongsIndexs = {
+    const uint8_t MaxSongs = 8;
+    const bn::array<uint8_t, 18> SongsIndexs = {
         0, 15,
         16, 33,
         34, 47,
@@ -74,7 +54,7 @@ private:
         107, 125,
         126, 133};
 
-    bn::array<bn::sound_item, 134> AudioItems = {
+    const bn::array<bn::sound_item, 134> AudioItems = {
         // 0 - 15
         bn::sound_items::vvv_01_zugzwang_000,
         bn::sound_items::vvv_01_zugzwang_001,

@@ -19,7 +19,6 @@ void AlbumMenuState::Update()
 {
     MusicManager->Update();
     TextManager->Update();
-    TextManager->GenerateText(0, 0,bn::to_string<64>(MusicManager->GetCurrentFrame()));
     for (uint8_t Option = 0; Option < AlbumTexts.size(); ++Option)
     {
         if (Option != SelectedOption)
@@ -85,15 +84,6 @@ void AlbumMenuState::UpdateAutoPlay()
     TextManager->ClearStaticText();
     if (MusicManager->GetAutoPlayEnabled())
     {
-        TextManager->GenerateStaticText(10, 0, "Auto Play: ON");
-    }
-}
-
-void AlbumMenuState::UpdatePlaying()
-{
-    TextManager->ClearStaticText();
-    if (MusicManager->GetIsPlaying())
-    {
-        TextManager->GenerateStaticText(10, 15, "Playing");
+        TextManager->GenerateStaticText(80, -70, "AUTO");
     }
 }

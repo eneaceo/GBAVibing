@@ -24,7 +24,6 @@ public:
     void Auto() override;
 
     void UpdateSelectedOption() override;
-    void UpdatePlaying() override;
     void UpdateAutoPlay() override;
 
 private:
