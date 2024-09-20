@@ -3,6 +3,8 @@
 #include "StateCommands.h"
 #include "MainMenuState.h"
 
+#include "bn_regular_bg_items_background_0.h"
+
 AlbumMenuState::AlbumMenuState()
 {
     TextManager->SetTextAlignement(bn::sprite_text_generator::alignment_type::LEFT);
@@ -13,6 +15,7 @@ AlbumMenuState::AlbumMenuState()
     InputManager->BindButton(InputHandler::BUTTONS::START, bn::make_unique<AutoCommand>());
     MusicManager = bn::make_unique<MusicHandler>();
     MusicManager->Attach(this);
+    BackgroundManager->LoadBackground(bn::regular_bg_items::background_0);
 }
 
 void AlbumMenuState::Update()
@@ -40,6 +43,7 @@ void AlbumMenuState::Enter()
 void AlbumMenuState::Exit()
 {
     TextManager->ClearText();
+    BackgroundManager->ResetBackground();
 }
 
 void AlbumMenuState::Select()

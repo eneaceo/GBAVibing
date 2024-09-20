@@ -4,6 +4,7 @@
 #include "bn_unique_ptr.h"
 #include "InputHandler.h"
 #include "TextHandler.h"
+#include "BackgroundHandler.h"
 
 class State
 {
@@ -12,6 +13,7 @@ public:
     {
         InputManager = bn::make_unique<InputHandler>();
         TextManager = bn::make_unique<TextHandler>();
+        BackgroundManager = bn::make_unique<BackgroundHandler>(); 
     };
 
     virtual ~State()
@@ -31,9 +33,9 @@ public:
     virtual void Auto() {};
 
 protected:
-    // TODO Change this to object, no need for pointers
     bn::unique_ptr<InputHandler> InputManager;
     bn::unique_ptr<TextHandler> TextManager;
+    bn::unique_ptr<BackgroundHandler> BackgroundManager;
 
     uint8_t SelectedOption = 0;
 };

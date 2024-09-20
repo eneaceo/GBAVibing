@@ -4,12 +4,15 @@
 #include "CreditsState.h"
 #include "AlbumMenuState.h"
 
+#include "bn_regular_bg_items_background_0.h"
+
 MainMenuState::MainMenuState()
 {
     TextManager->SetTextAlignement(bn::sprite_text_generator::alignment_type::CENTER);
     InputManager->BindButton(InputHandler::BUTTONS::A, bn::make_unique<SelectCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::UP, bn::make_unique<MenuUpCommand>());
     InputManager->BindButton(InputHandler::BUTTONS::DOWN, bn::make_unique<MenuDownCommand>());
+    BackgroundManager->LoadBackground(bn::regular_bg_items::background_0);
 }
 
 void MainMenuState::Update()
@@ -38,6 +41,7 @@ void MainMenuState::Enter()
 void MainMenuState::Exit()
 {
     TextManager->ClearText();
+    BackgroundManager->ResetBackground();
 }
 
 void MainMenuState::Select()

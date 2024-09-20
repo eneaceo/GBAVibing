@@ -12,7 +12,7 @@ namespace
 int main()
 {
     bn::core::init();
-    bn::bg_palettes::set_transparent_color(bn::color(0, 31, 0));
+    bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
     StateManager& StateSingleton = StateManager::GetInstance();
     StateSingleton.ChangeState(bn::make_unique<MainMenuState>());
