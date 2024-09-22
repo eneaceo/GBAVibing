@@ -3,6 +3,13 @@
 
 void BackgroundHandler::Update()
 {
+    LoadBackground(BackgroundItems[BackgroundIndex]);
+    if (Counter == AnimationSpeed)
+    {
+        Counter = 0;
+        BackgroundIndex = Random.get_int(BackgroundItems.size());
+    }
+    Counter++;
 }
 
 void BackgroundHandler::LoadBackground(bn::regular_bg_item aBackground)
@@ -13,19 +20,6 @@ void BackgroundHandler::LoadBackground(bn::regular_bg_item aBackground)
 
 void BackgroundHandler::AnimateBackground()
 {
-}
-
-void BackgroundHandler::PlayIntro()
-{
-    for (int Counter = 0; Counter < IntroItems.size(); ++Counter)
-    {
-        LoadBackground(IntroItems[Counter]);
-        for (int Frame = 0; Frame < 2; ++Frame)
-        {
-            bn::core::update();
-        }
-    }
-    LoadBackground(bn::regular_bg_items::background_0);
 }
 
 void BackgroundHandler::ResetBackground()

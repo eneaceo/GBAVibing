@@ -17,29 +17,46 @@ MainMenuState::MainMenuState()
 
 void MainMenuState::Update()
 {
-    TextManager->Update();
-    for (uint8_t Option = 0; Option < MenuTexts.size(); ++Option)
+    if (EnteringState)
     {
-        if (Option != SelectedOption)
+        if (!SoundHandler.get()->active())
         {
-            TextManager->GenerateText(0, TextSeparation * Option, MenuTexts[Option]);
-        }
-        else
-        {
-            TextManager->GenerateSelectedText(0, TextSeparation * Option, MenuTexts[Option]);
+            BackgroundManager->SetAnimationSpeed(120);
+            EnteringState = false;
         }
     }
-    InputManager->HandleInput(*this);
+    else
+    {
+        TextManager->Update();
+        for (uint8_t Option = 0; Option < MenuTexts.size(); ++Option)
+        {
+            if (Option != SelectedOption)
+            {
+                TextManager->GenerateText(0, TextSeparation * Option, MenuTexts[Option]);
+            }
+            else
+            {
+                TextManager->GenerateSelectedText(0, TextSeparation * Option, MenuTexts[Option]);
+            }
+        }
+        InputManager->HandleInput(*this);
+    }
+    BackgroundManager->Update();
 }
 
 void MainMenuState::Enter(const bool aReset)
 {
     if (aReset)
     {
-        BackgroundManager->PlayIntro();
+        BackgroundManager->SetAnimationSpeed(5);
+        EnteringState = true;
+        SoundHandler = bn::sound_items::intro.play();
     }
-    TextManager->GenerateStaticText(0, -40, TextBandName);
-    TextManager->GenerateStaticText(0, -30, TextAlbumName);
+    else
+    {
+        TextManager->GenerateStaticText(0, -40, TextBandName);
+        TextManager->GenerateStaticText(0, -30, TextAlbumName);
+    }
 }
 
 void MainMenuState::Exit()

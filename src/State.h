@@ -37,6 +37,9 @@ protected:
     bn::unique_ptr<TextHandler> TextManager;
     bn::unique_ptr<BackgroundHandler> BackgroundManager;
 
+
+    bool EnteringState = false;
+    bool ExitingState = false;
     uint8_t SelectedOption = 0;
 };
 
