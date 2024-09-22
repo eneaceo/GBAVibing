@@ -3,13 +3,36 @@
 
 void BackgroundHandler::Update()
 {
-    LoadBackground(BackgroundItems[BackgroundIndex]);
-    if (Counter == AnimationSpeed)
-    {
-        Counter = 0;
-        BackgroundIndex = Random.get_int(BackgroundItems.size());
+    if (Animating)
+    {    
+        SpeedCounter++;
+        DurationCounter++;
+        if (SpeedCounter == AnimationSpeed)
+        {
+            SpeedCounter = 0;
+            BackgroundIndex = Random.get_int(BackgroundItems.size());
+        }
+        if (DurationCounter == AnimationDuration)
+        {
+            Animating = false;
+            DurationCounter = 0;
+            SpeedCounter = 0;
+            BackgroundIndex = 0;
+            AnimationDuration = Random.get_int(ConstPauseDuration);
+        }
+        LoadBackground(BackgroundItems[BackgroundIndex]);
     }
-    Counter++;
+    else
+    {
+        DurationCounter++;
+        if (DurationCounter == AnimationDuration)
+        {
+            AnimationSpeed = Random.get_int(ConstAnimationSpeed);
+            AnimationDuration = Random.get_int(ConstAnimationDuration);
+            DurationCounter = 0;
+            Animating = true;
+        }
+    }
 }
 
 void BackgroundHandler::LoadBackground(bn::regular_bg_item aBackground)
@@ -18,8 +41,9 @@ void BackgroundHandler::LoadBackground(bn::regular_bg_item aBackground)
     Background = aBackground.create_bg(0, 0);
 }
 
-void BackgroundHandler::AnimateBackground()
+void BackgroundHandler::AnimateBackground(const bool aAnimate)
 {
+    Animating = aAnimate;
 }
 
 void BackgroundHandler::ResetBackground()

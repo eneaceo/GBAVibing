@@ -6,6 +6,7 @@
 #include "bn_array.h"
 #include "bn_optional.h"
 #include "bn_sound_items.h"
+#include "bn_random.h"
 
 class MainMenuState : public State
 {
@@ -21,6 +22,10 @@ public:
     void MenuDown() override;
 
 private:
+    const uint16_t ConstAudioCounter = 480;
+    uint16_t SoundCounter = 0; 
+    uint16_t SoundTimer = 60;
+    bn::random Random;
     // Texts
     const bn::string<32> TextBandName = "VVV -Trippin'you-";
     const bn::string<32> TextAlbumName = "- Vaciador -";

@@ -20,6 +20,7 @@ AlbumMenuState::AlbumMenuState()
 
 void AlbumMenuState::Update()
 {
+    BackgroundManager->Update();
     MusicManager->Update();
     TextManager->Update();
     for (uint8_t Option = 0; Option < AlbumTexts.size(); ++Option)
@@ -48,11 +49,13 @@ void AlbumMenuState::Exit()
 
 void AlbumMenuState::Select()
 {
+    bn::sound_items::button.play();
     MusicManager->PlayMusic(SelectedOption);
 }
 
 void AlbumMenuState::Back()
 {
+    bn::sound_items::button.play();
     if (MusicManager->GetIsPlaying())
     {
         MusicManager->StopMusic();
@@ -65,16 +68,28 @@ void AlbumMenuState::Back()
 
 void AlbumMenuState::MenuUp()
 {
+    if (!MusicManager->GetIsPlaying())
+    {
+        bn::sound_items::button.play();
+    }
     SelectedOption = (SelectedOption + AlbumTexts.size() - 1) % AlbumTexts.size();
 }
 
 void AlbumMenuState::MenuDown()
 {
+    if (!MusicManager->GetIsPlaying())
+    {
+        bn::sound_items::button.play();
+    }
     SelectedOption = (SelectedOption + 1) % AlbumTexts.size();
 }
 
 void AlbumMenuState::Auto()
 {
+    if (!MusicManager->GetIsPlaying())
+    {
+        bn::sound_items::button.play();
+    }
     MusicManager->AutoPlay();
 }
 

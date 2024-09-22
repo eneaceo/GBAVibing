@@ -7,6 +7,7 @@
 #include "State.h"
 #include "bn_string.h"
 #include "bn_array.h"
+#include "bn_sound_items.h"
 
 class AlbumMenuState : public State, public Observer
 {

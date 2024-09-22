@@ -21,14 +21,22 @@ public:
 
     void Update();
     void LoadBackground(bn::regular_bg_item aBackground);
-    void AnimateBackground();
     void ResetBackground();
-    void SetAnimationSpeed(uint8_t aSpeed) { AnimationSpeed = aSpeed; };
+    void AnimateBackground(const bool aAnimate);
+    void SetAnimationSpeed(const uint8_t aSpeed) { AnimationSpeed = aSpeed; };
+    void SetAnimationduration(const uint8_t aDuration) { AnimationDuration = aDuration; };
 
 private:
-    uint8_t BackgroundIndex = 0;
-    uint8_t Counter = 0;
+    uint8_t Animating = false;
+    uint8_t SpeedCounter = 0;
     uint8_t AnimationSpeed = 5;
+    uint8_t DurationCounter = 0;
+    uint8_t AnimationDuration = 60;
+    const uint8_t ConstAnimationSpeed = 10;
+    const uint8_t ConstAnimationDuration = 60;
+    const uint8_t ConstPauseDuration = 240;
+
+    uint8_t BackgroundIndex = 0;
     bn::random Random;
     bn::optional<bn::regular_bg_ptr> Background;
 

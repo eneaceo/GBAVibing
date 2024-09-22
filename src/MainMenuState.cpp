@@ -17,16 +17,28 @@ MainMenuState::MainMenuState()
 
 void MainMenuState::Update()
 {
+    BackgroundManager->Update();
     if (EnteringState)
     {
         if (!SoundHandler.get()->active())
         {
-            BackgroundManager->SetAnimationSpeed(120);
             EnteringState = false;
+            TextManager->GenerateStaticText(0, -40, TextBandName);
+            TextManager->GenerateStaticText(0, -30, TextAlbumName);
         }
     }
     else
     {
+        if (!SoundHandler.get()->active())
+        {
+            SoundCounter++;
+            if (SoundCounter == SoundTimer)
+            {
+                SoundCounter = 0;
+                SoundTimer = Random.get_int(120, ConstAudioCounter);
+                SoundHandler = bn::sound_items::loop.play(0.2);
+            }
+        }
         TextManager->Update();
         for (uint8_t Option = 0; Option < MenuTexts.size(); ++Option)
         {
@@ -41,16 +53,14 @@ void MainMenuState::Update()
         }
         InputManager->HandleInput(*this);
     }
-    BackgroundManager->Update();
 }
 
 void MainMenuState::Enter(const bool aReset)
 {
     if (aReset)
     {
-        BackgroundManager->SetAnimationSpeed(5);
-        EnteringState = true;
         SoundHandler = bn::sound_items::intro.play();
+        EnteringState = true;
     }
     else
     {
@@ -61,12 +71,14 @@ void MainMenuState::Enter(const bool aReset)
 
 void MainMenuState::Exit()
 {
+    SoundHandler.get()->stop();
     TextManager->ClearText();
     BackgroundManager->ResetBackground();
 }
 
 void MainMenuState::Select()
 {
+    bn::sound_items::button.play();
     switch (SelectedOption)
     {
     case 0:
@@ -82,10 +94,12 @@ void MainMenuState::Select()
 
 void MainMenuState::MenuUp()
 {
+    bn::sound_items::button.play();
     SelectedOption = 1 - SelectedOption;
 }
 
 void MainMenuState::MenuDown()
 {
+    bn::sound_items::button.play();
     SelectedOption = 1 - SelectedOption;
 }
