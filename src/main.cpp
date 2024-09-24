@@ -2,8 +2,7 @@
 #include "bn_color.h"
 #include "bn_bg_palettes.h"
 
-#include "StateManager.h"
-#include "MainMenuState.h"
+#include "TextGenerator.h"
 
 namespace
 {
@@ -14,12 +13,16 @@ int main()
     bn::core::init();
     bn::bg_palettes::set_transparent_color(bn::color(0, 0, 0));
 
-    StateManager &StateSingleton = StateManager::GetInstance();
-    StateSingleton.ChangeState(bn::make_unique<MainMenuState>(), true);
+    TextGenerator CurrentTextGenerator = TextGenerator();
+    CurrentTextGenerator.SetTextAlignement(bn::sprite_text_generator::alignment_type::CENTER);
+    CurrentTextGenerator.GenerateText(0, 10, "Hello, World!");
+    CurrentTextGenerator.GenerateText(0, 20, "Hello, World!");
+    CurrentTextGenerator.GenerateText(0, 30, "Hello, World!");
+    CurrentTextGenerator.GenerateText(0, 40, "Hello, World!");
 
     while (true)
     {
-        StateSingleton.Update();
+        
         bn::core::update();
     };
 }
