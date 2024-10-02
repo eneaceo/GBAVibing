@@ -1,58 +1,30 @@
 #include "InputHandler.h"
-#include "Command.h"
-#include "State.h"
 #include "bn_keypad.h"
+#include "StateBase.h"
 
-#include "bn_color.h"
-#include "bn_bg_palettes.h"
-
-void InputHandler::BindButton(uint8_t aButton, bn::unique_ptr<Command> aNewCommand)
+void InputHandler::Update(StateBase *aState)
 {
-    switch (aButton)
+    if (bn::keypad::any_pressed() && aState != nullptr)
     {
-    case BUTTONS::A:
-        ButtonA = bn::move(aNewCommand);
-        break;
-    case BUTTONS::B:
-        ButtonB = bn::move(aNewCommand);
-        break;
-    case BUTTONS::UP:
-        ButtonUp = bn::move(aNewCommand);
-        break;
-    case BUTTONS::DOWN:
-        ButtonDown = bn::move(aNewCommand);
-        break;
-    case BUTTONS::START:
-        ButtonStart = bn::move(aNewCommand);
-        break;
-    default:
-        break;
-    }
-}
-
-void InputHandler::HandleInput(State &aState)
-{
-    if (bn::keypad::any_pressed())
-    {
-        if (bn::keypad::a_pressed() && ButtonA)
+        if (bn::keypad::a_pressed())
         {
-            ButtonA->Execute(aState);
+            aState->Select();
         }
-        else if (bn::keypad::b_pressed() && ButtonB)
+        else if (bn::keypad::b_pressed())
         {
-            ButtonB->Execute(aState);
+            aState->Back();
         }
-        else if (bn::keypad::up_pressed() && ButtonUp)
+        else if (bn::keypad::up_pressed())
         {
-            ButtonUp->Execute(aState);
+            aState->MenuUp();
         }
-        else if (bn::keypad::down_pressed() && ButtonDown)
+        else if (bn::keypad::down_pressed())
         {
-            ButtonDown->Execute(aState);
+            aState->MenuDown();
         }
-        else if (bn::keypad::start_pressed() && ButtonStart)
+        else if (bn::keypad::start_pressed())
         {
-            ButtonStart->Execute(aState);
+            aState->Auto();
         }
     }
 }

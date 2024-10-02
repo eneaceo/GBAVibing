@@ -1,27 +1,24 @@
 #ifndef CREDITSTATE_H
 #define CREDITSTATE_H
 
-#include "State.h"
-#include "bn_random.h"
-#include "bn_optional.h"
-#include "bn_sound_items.h"
+#include "StateBase.h"
+#include "bn_string.h"
 
-class CreditsState : public State
+class CreditsState : public StateBase
 {
 public:
-    CreditsState();
+    CreditsState(TextGenerator *aTextGenerator, ImageHandler *aImageHandler, MusicHandler *aMusicHandler);
     ~CreditsState() = default;
 
     void Update() override;
-    void Enter(const bool aReset) override;
+    void Enter() override;
     void Exit() override;
+
     void Back() override;
+
 private:
-    const uint16_t ConstAudioCounter = 480;
-    uint16_t SoundCounter = 0; 
-    uint16_t SoundTimer = 60;
-    bn::random Random;
-    bn::optional<bn::sound_handle> SoundHandler;
+    const bn::string<32> TextCredits01 = "Gracias a VVV -Trippin'you-";
+    const bn::string<32> TextCredits02 = "por dejarme usar su música";
 };
 
 #endif

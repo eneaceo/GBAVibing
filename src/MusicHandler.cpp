@@ -1,31 +1,37 @@
 #include "MusicHandler.h"
-#include "AlbumMenuState.h"
-#include "bn_sound_actions.h"
 
 void MusicHandler::Update()
 {
-    if (IsPlaying && !SoundHandler.get()->active())
+    if (!SoundHandler.get()->active())
     {
-        CurrentIndex++;
-        if (CurrentIndex <= CurrentSongMaxIndex)
+        if (IsPlaying)
         {
-            SoundHandler = AudioItems[CurrentIndex].play_with_priority(CurrentIndex);
+            CurrentIndex++;
+            if (CurrentIndex <= CurrentSongMaxIndex)
+            {
+                SoundHandler = AudioItems[CurrentIndex].play_with_priority(CurrentIndex);
+            }
+            else if (AutoPlayEnabled && CurrentSong != MaxSongs)
+            {
+                CurrentSong++;
+                PlaySong(CurrentSong);
+            }
+            else
+            {
+                IsPlaying = false;
+                PlayBackground();
+            }
         }
-        else if (AutoPlayEnabled && CurrentSong != MaxSongs)
+        else if (IsPlayingBackground)
         {
-            CurrentSong++;
-            PlayMusic(CurrentSong);
-            NotifySelectedOption();
-        }
-        else
-        {
-            IsPlaying = false;
+            SoundHandler = bn::sound_items::loop.play(0.2);
         }
     }
 }
 
-void MusicHandler::PlayMusic(uint8_t aSongNumber)
+void MusicHandler::PlaySong(int aSongNumber)
 {
+    IsPlayingBackground = false;
     SoundHandler.get()->stop();
     CurrentSong = aSongNumber;
     CurrentIndex = GetSongStart(aSongNumber);
@@ -43,30 +49,23 @@ void MusicHandler::StopMusic()
 void MusicHandler::AutoPlay()
 {
     AutoPlayEnabled = !AutoPlayEnabled;
-    NotifyAutoPlay();
 }
 
-uint8_t MusicHandler::GetSongStart(const uint8_t aSongNumber) const
+int MusicHandler::GetSongStart(const int aSongNumber) const
 {
     return SongsIndexs[aSongNumber * 2];
 };
 
-uint8_t MusicHandler::GetSongEnd(const uint8_t aSongNumber) const
+int MusicHandler::GetSongEnd(const int aSongNumber) const
 {
     return SongsIndexs[(aSongNumber * 2) + 1];
 };
 
-void MusicHandler::Attach(Observer *aObserver)
+void MusicHandler::PlayBackground()
 {
-    MusicObserver = aObserver;
+    if (!IsPlayingBackground)
+    {
+        IsPlayingBackground = true;
+        SoundHandler = bn::sound_items::loop.play(0.2);
+    }
 }
-
-void MusicHandler::NotifySelectedOption()
-{
-    MusicObserver->UpdateSelectedOption();
-};
-
-void MusicHandler::NotifyAutoPlay()
-{
-    MusicObserver->UpdateAutoPlay();
-};

@@ -1,48 +1,33 @@
 #include "CreditsState.h"
-#include "MainMenuState.h"
-#include "StateManager.h"
-#include "StateCommands.h"
-#include "bn_regular_bg_items_background_0.h"
+#include "StateHandler.h"
+#include "TextGenerator.h"
+#include "MusicHandler.h"
+#include "bn_sound_items.h"
 
-CreditsState::CreditsState()
+CreditsState::CreditsState(TextGenerator *aTextGenerator, ImageHandler *aImageHandler, MusicHandler *aMusicHandler)
+    : StateBase(aTextGenerator, aImageHandler, aMusicHandler)
 {
-    TextManager->SetTextAlignement(bn::sprite_text_generator::alignment_type::CENTER);
-    InputManager->BindButton(InputHandler::BUTTONS::B, bn::make_unique<BackCommand>());
-    BackgroundManager->LoadBackground(bn::regular_bg_items::background_0);
+    TextGeneratorPTR->SetTextAlignement(bn::sprite_text_generator::alignment_type::CENTER);
 }
 
 void CreditsState::Update()
 {
-    BackgroundManager->Update();
-    if (!SoundHandler.get()->active())
-    {
-        SoundCounter++;
-        if (SoundCounter == SoundTimer)
-        {
-            SoundCounter = 0;
-            SoundTimer = Random.get_int(120, ConstAudioCounter);
-            SoundHandler = bn::sound_items::loop.play(0.2);
-        }
-    }
-    InputManager->HandleInput(*this);
 }
 
-void CreditsState::Enter(const bool aReset)
+void CreditsState::Enter()
 {
-    TextManager->GenerateStaticText(0, -40, "Créditos");
-    TextManager->GenerateStaticText(-60, -10, "Música");
-    TextManager->GenerateStaticText(40, -10, "VVV -Trippin'you-");
-    TextManager->GenerateStaticText(-60, 10, "Programación");
-    TextManager->GenerateStaticText(40, 10, "MilleLire");
-    TextManager->GenerateStaticText(0, 60, "2024");
+    MusicHandlerPTR->PlayBackground();
+    TextGeneratorPTR->GenerateStaticText(0, -8, TextCredits01);
+    TextGeneratorPTR->GenerateStaticText(0, 8, TextCredits02);
 }
 
 void CreditsState::Exit()
 {
-    TextManager->ClearText();
+    TextGeneratorPTR->ClearText();
 }
 
 void CreditsState::Back()
 {
-    StateManager::GetInstance().ChangeState(bn::make_unique<MainMenuState>());
+    bn::sound_items::button.play();
+    StateHandler::GetInstance().SetState(StateHandler::STATES::MENU);
 }
