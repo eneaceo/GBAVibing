@@ -1,0 +1,21 @@
+PNG TO BMP:
+
+@echo off
+for /l %%i in (0,1,"NUMBER OF IMAGES") do (
+    ffmpeg -i "IMAGE_IN_%%i.png" ^
+    -filter_complex "scale=256:256:force_original_aspect_ratio=1,pad=256:256:(( (ow - iw)/2 )):(( (oh - ih)/2 ))" ^
+    -pix_fmt rgb8 "IMAGE_OUT_%%i.bmp"
+)
+
+Duplicate .json (Very useful for making the .json for the backgrounds)
+
+@echo off
+for /l %%i in (0,1,"NUMBER OF DUPLICATES") do (
+    setlocal EnableDelayedExpansion
+
+    rem Determine the correct filename format based on the value of %%i
+    set "filename=JSON_OUT_%%i.json"
+
+    copy /y JSON_IN.json !filename! >nul
+    endlocal
+)
